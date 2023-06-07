@@ -35,6 +35,9 @@ class Video(models.Model):
         # db_index=True
     )
 
+    def __str__(self) -> str:
+        return f"{self.user.username} - {self.title}"
+
 
 # Thumbnail model
 class Thumbnail(models.Model):
@@ -66,6 +69,9 @@ class Thumbnail(models.Model):
         # db_index=True,
     )
 
+    def __str__(self) -> str:
+        return f"{self.user.username} - {self.video.title}"
+
 
 # Subtitles model
 class Subtitles(models.Model):
@@ -78,3 +84,6 @@ class Subtitles(models.Model):
     file_path = models.URLField()
     # https://en.wikipedia.org/wiki/ISO_639-1
     language_code = models.CharField(max_length=2)
+
+    def __str__(self) -> str:
+        return f"{self.video.title} - {self.language_code}"
