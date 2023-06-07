@@ -13,10 +13,6 @@ const PICTURE_SIZE = 25;
 
 const Header = () => {
   const { data: session, status } = useSession();
-  useEffect(() => {
-    console.log("session", session);
-    console.log(session?.user, status);
-  }, [session]);
 
   const onSignin = (e) => {
     e.preventDefault();

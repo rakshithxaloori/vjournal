@@ -44,7 +44,6 @@ const VideoRecorder = () => {
   }, [stream]);
 
   const handleVisibilityChange = () => {
-    console.log("handleVisibilityChange", document.visibilityState);
     if (streamStatus === STREAM_STATUS.RECORDING) return;
 
     if (document.visibilityState === "hidden") stopStream();
@@ -92,7 +91,6 @@ const VideoRecorder = () => {
   };
 
   const stopStream = () => {
-    console.log("stopStream", stream);
     if (stream === null) return;
     stream.getTracks().forEach((track) => track.stop());
     setStream(null);

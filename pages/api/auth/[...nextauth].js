@@ -41,7 +41,6 @@ export const authOptions = {
         token_key: token?.token_key,
         user: token?.user,
       };
-      console.log("session callback", session);
       return session;
     },
   },
