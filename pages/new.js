@@ -1,3 +1,4 @@
+import { useState } from "react";
 import dynamic from "next/dynamic";
 
 import Box from "@mui/material/Box";
@@ -8,6 +9,7 @@ const WebcamRecorder = dynamic(() => import("@/components/recorder"), {
 });
 
 const New = () => {
+  const [error, setError] = useState("");
   return (
     <Box
       sx={{
@@ -19,10 +21,7 @@ const New = () => {
         width: "100%",
       }}
     >
-      <Typography variant="h4" component="h4" color="primary">
-        Webcam Recorder
-      </Typography>
-      <WebcamRecorder />
+      <WebcamRecorder setError={setError} />
     </Box>
   );
 };

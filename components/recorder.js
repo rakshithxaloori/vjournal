@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
+import { createClientAPIKit, networkError, uploadToS3 } from "@/utils/APIKit";
 
 const MIME_TYPE = "video/webm;codecs=vp9,opus";
 const TIME_SLICE = 10 * 1000; // 10 seconds
@@ -9,18 +13,22 @@ const MAX_RECORD_TIME = 15 * 60 * 1000; // 15 minutes
 const STREAM_STATUS = {
   IDLE: "idle",
   RECORDING: "recording",
+  RECORDED: "recorded",
   INACTIVE: "inactive",
 };
 
-const VideoRecorder = () => {
+const VideoRecorder = ({ setError }) => {
+  const { data: session } = useSession();
   const mediaRecorderRef = useRef(null);
   const previewRef = useRef(null);
 
   const [permission, setPermission] = useState(false);
-  const [streamStatus, setStreamStatus] = useState(STREAM_STATUS.IDLE);
+  const [streamStatus, setStreamStatus] = useState(STREAM_STATUS.INACTIVE);
   const [stream, setStream] = useState(null);
+  const [recordedBlob, setRecordedBlob] = useState(null); // recorded video blob
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
   const [videoChunks, setVideoChunks] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     startStream();
@@ -78,7 +86,7 @@ const VideoRecorder = () => {
         ]);
 
         setStream(combinedStream);
-        setStreamStatus(STREAM_STATUS.INACTIVE);
+        setStreamStatus(STREAM_STATUS.IDLE);
 
         //set videostream to live feed player
         previewRef.current.srcObject = videoStream;
@@ -91,9 +99,12 @@ const VideoRecorder = () => {
   };
 
   const stopStream = () => {
+    console.log("Stopping stream", stream);
     if (stream === null) return;
     stream.getTracks().forEach((track) => track.stop());
     setStream(null);
+    setPermission(false);
+    setStreamStatus(STREAM_STATUS.INACTIVE);
     if (previewRef.current) previewRef.current.srcObject = null;
   };
 
@@ -104,6 +115,7 @@ const VideoRecorder = () => {
     mediaRecorderRef.current = media;
     mediaRecorderRef.current.start(TIME_SLICE);
 
+    console.log(mediaRecorderRef.current.state);
     mediaRecorderRef.current.addEventListener(
       "dataavailable",
       handleDataAvailable
@@ -111,16 +123,22 @@ const VideoRecorder = () => {
   };
 
   const stopRecording = () => {
-    setPermission(false);
-    setStreamStatus(STREAM_STATUS.INACTIVE);
+    setStreamStatus(STREAM_STATUS.RECORDED);
 
     mediaRecorderRef.current.stop();
 
     mediaRecorderRef.current.onstop = () => {
-      const videoBlob = new Blob(videoChunks, { type: MIME_TYPE });
+      const videoBlob = new Blob(videoChunks, {
+        type: MIME_TYPE,
+        lastModified: Date.now(),
+        name: "video.webm", // TODO
+      });
       const videoUrl = URL.createObjectURL(videoBlob);
 
+      setRecordedBlob(videoBlob);
       setRecordedVideoUrl(videoUrl);
+      console.log(videoBlob);
+      console.log(videoUrl);
       setVideoChunks([]);
       mediaRecorderRef.current.removeEventListener(
         "dataavailable",
@@ -131,10 +149,41 @@ const VideoRecorder = () => {
 
   let localVideoChunks = [];
   const handleDataAvailable = (event) => {
+    // TODO less than 10 seconds(timeslice) is throwing error
     if (typeof event.data === "undefined") return;
     if (event.data.size === 0) return;
     localVideoChunks.push(event.data);
     setVideoChunks(localVideoChunks);
+  };
+
+  const upload = async () => {
+    try {
+      const APIKit = await createClientAPIKit(session?.token_key);
+      const response = await APIKit.post("/api/video/upload/", {
+        file_size: recordedBlob.size,
+      });
+      const { s3_urls, video_id } = response.data.payload;
+      const { video, thumbnail } = s3_urls;
+      await uploadToS3(
+        recordedBlob,
+        video,
+        (progress) => {
+          console.log(progress);
+          setUploadProgress(progress.progress * 100);
+        },
+        () => {
+          console.log("done");
+          // TODO make API request to update video status to "uploaded"
+        },
+        (error) => {
+          {
+            console.log(error);
+          }
+        }
+      );
+    } catch (e) {
+      setError(networkError(e));
+    }
   };
 
   return (
@@ -146,32 +195,39 @@ const VideoRecorder = () => {
       }}
     >
       <Box>
+        <Typography variant="h4" color="primary">
+          Progress {uploadProgress}%
+        </Typography>
         {!recordedVideoUrl ? (
           <video ref={previewRef} autoPlay style={videoStyle}></video>
         ) : null}
         {recordedVideoUrl ? (
-          <Box>
+          <>
             <video
               src={recordedVideoUrl}
               autoPlay
               loop
               style={videoStyle}
             ></video>
-            <a download href={recordedVideoUrl}>
+            {/* <a download href={recordedVideoUrl}>
               Download Recording
-            </a>
-          </Box>
+            </a> */}
+          </>
         ) : null}
       </Box>
       <Box>
         {permission ? (
-          streamStatus === STREAM_STATUS.INACTIVE ? (
+          streamStatus === STREAM_STATUS.IDLE ? (
             <Button onClick={startRecording} variant="contained">
               Start Recording
             </Button>
           ) : streamStatus === STREAM_STATUS.RECORDING ? (
             <Button onClick={stopRecording} variant="contained">
               Stop Recording
+            </Button>
+          ) : streamStatus === STREAM_STATUS.RECORDED ? (
+            <Button onClick={upload} variant="contained">
+              Upload
             </Button>
           ) : null
         ) : (

@@ -34,3 +34,30 @@ export const networkError = (error) => {
     return "Huh, something went wrong";
   }
 };
+
+export const uploadToS3 = async (
+  file,
+  s3Url,
+  onProgress,
+  onSuccess,
+  onFailure
+) => {
+  const formData = new FormData();
+  // append the fields in url in formData
+  Object.keys(s3Url.fields).forEach((key) => {
+    formData.append(key, s3Url.fields[key]);
+  });
+
+  // append the file
+  formData.append("file", file);
+
+  axios
+    .post(s3Url.url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress: onProgress,
+    })
+    .then(onSuccess)
+    .catch(onFailure);
+};
