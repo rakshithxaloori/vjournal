@@ -27,7 +27,7 @@ class Video(models.Model):
 
     title = models.CharField(max_length=255)
     file_path = models.URLField()
-    duration = models.PositiveIntegerField()  # in seconds
+    duration = models.PositiveIntegerField(null=True, blank=True)  # in seconds
     status = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,
@@ -51,7 +51,7 @@ class Thumbnail(models.Model):
         (FAILED, "Failed"),
     ]
 
-    user = models.ForeignKey(User, related_name="videos", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="thumbnails", on_delete=models.CASCADE)
     video = models.OneToOneField(
         Video, related_name="thumbnail", on_delete=models.CASCADE
     )

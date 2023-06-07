@@ -23,7 +23,7 @@ from video.utils import create_presigned_s3_post
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_post_url(request):
+def get_upload_view(request):
     """
     This view is responsible for returning a presigned post url
     to the client. The client will then use this url to upload
@@ -34,15 +34,17 @@ def get_post_url(request):
 
     # Create a uuid for the video
     video_id = uuid.uuid4()
+    file_path = f"videos/{request.user.username}/{video_id}"
+
     # Create a new video
     video = Video.objects.create(
         id=video_id,
         user=request.user,
         title=f"{request.user.username} on {datetime.now().strftime('%Y-%m-%d')}",
+        file_path=file_path,
     )
 
     # Generate a presigned post url
-    file_path = f"videos/{request.user.id}/{video_id}"
     presigned_post = create_presigned_s3_post(file_size, file_path)
 
     # Return the presigned post url to the client

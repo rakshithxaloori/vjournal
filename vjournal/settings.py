@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     "knox",
     ### VJournal Apps ###
     "authentication",
+    "video",
+    "health",
 ]
 
 MIDDLEWARE = [
@@ -194,7 +196,7 @@ if CI_CD_STAGE == DEV_STAGE:
 ################################################################################
 # CORS
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
-CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://\w+\.getabranddeal\.com$"]
+CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://\w+\.vjournal\.app$"]  # TODO
 
 if CI_CD_STAGE == DEV_STAGE:
     CORS_ALLOWED_ORIGIN_REGEXES.append(
