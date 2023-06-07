@@ -3,18 +3,9 @@ import Link from "next/link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-const RAKSHITH_TWITTER_LINK = "https://twitter.com/rakshithXaloori";
+import { linkStyle } from "@/utils/styles";
 
-const linkStyle = {
-  color: "#fff",
-  fontSize: 14,
-  marginRight: 30,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  flexDirection: "row",
-  textDecoration: "none",
-};
+const RAKSHITH_TWITTER_LINK = "https://twitter.com/rakshithXaloori";
 
 const Footer = () => {
   return (
@@ -26,6 +17,7 @@ const Footer = () => {
         flexDirection: "row",
         flexWrap: "wrap",
         alignItems: "center",
+        columnGap: 2,
       }}
     >
       <Link
@@ -34,7 +26,9 @@ const Footer = () => {
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Typography component="span">Privacy Policy</Typography>
+        <Typography component="span" color="primary">
+          Privacy Policy
+        </Typography>
       </Link>
       <Link
         href="/terms"
@@ -42,7 +36,9 @@ const Footer = () => {
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Typography component="span">Terms</Typography>
+        <Typography component="span" color="primary">
+          Terms
+        </Typography>
       </Link>
       <Link
         href="/support"
@@ -50,29 +46,26 @@ const Footer = () => {
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Typography component="span">Support</Typography>
+        <Typography component="span" color="primary">
+          Support
+        </Typography>
       </Link>
       <Box sx={{ flexGrow: 1 }} />
-      <Typography component="span" sx={{ fontSize: 12, color: "white", mr: 3 }}>
+      <Typography component="span" sx={{ fontSize: 12, color: "white" }}>
         Made by
         <Link
           href={RAKSHITH_TWITTER_LINK}
+          style={{ textDecoration: "none" }}
           rel="noopener noreferrer"
           target="_blank"
         >
-          <Typography
-            component="span"
-            sx={{
-              fontSize: 12,
-              color: "white",
-            }}
-          >
+          <Typography component="span" color="primary" sx={{ fontSize: 12 }}>
             {" "}
             Rakshith
           </Typography>
         </Link>
       </Typography>
-      <Typography component="span" sx={{ fontSize: 12, color: "white" }}>
+      <Typography component="span" color="primary" sx={{ fontSize: 12 }}>
         © 2023 JuntoX
       </Typography>
     </Box>

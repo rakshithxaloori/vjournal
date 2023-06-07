@@ -17,10 +17,9 @@ const New = () => {
         justifyContent: "center",
         height: "100%",
         width: "100%",
-        padding: 3,
       }}
     >
-      <Typography variant="h2" component="h2" color="primary">
+      <Typography variant="h4" component="h4" color="primary">
         Webcam Recorder
       </Typography>
       <WebcamRecorder />

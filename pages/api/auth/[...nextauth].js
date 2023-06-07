@@ -29,13 +29,8 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, account }) {
       // Persist the OAuth access_token to the token right after signin
-      let rToken = null;
       if (account?.provider === "google") {
-        rToken = await google_jwt(account);
-      }
-      if (rToken) {
-        token = rToken;
-        return token;
+        token = await google_jwt(account);
       }
       return token;
     },
@@ -46,6 +41,7 @@ export const authOptions = {
         token_key: token?.token_key,
         user: token?.user,
       };
+      console.log("session callback", session);
       return session;
     },
   },
