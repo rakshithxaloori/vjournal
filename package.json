@@ -1,5 +1,5 @@
 {
-  "name": "vjournal-web",
+  "name": "vjournal",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "eslint": "8.42.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.4",
+    "axios": "^1.4.0",
+    "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
     "next": "13.4.4",
+    "next-auth": "^4.22.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   }
