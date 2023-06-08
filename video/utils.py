@@ -26,7 +26,7 @@ def create_presigned_s3_post(file_size, file_path):
     expires_in = URL_EXPIRY_SECS
 
     url = s3_client.generate_presigned_post(
-        Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+        Bucket=settings.AWS_CDN_BUCKET_NAME,
         Key=file_path,
         Fields=fields,
         Conditions=conditions,

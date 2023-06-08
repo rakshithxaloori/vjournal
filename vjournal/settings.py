@@ -150,7 +150,7 @@ USE_TZ = True
 
 AWS_S3_ACCESS_KEY_ID = os.environ["AWS_S3_ACCESS_KEY_ID"]
 AWS_S3_SECRET_ACCESS_KEY = os.environ["AWS_S3_SECRET_ACCESS_KEY"]
-AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
+AWS_CDN_BUCKET_NAME = os.environ["AWS_CDN_BUCKET_NAME"]
 AWS_S3_REGION_NAME = os.environ["AWS_S3_REGION_NAME"]
 AWS_S3_CUSTOM_DOMAIN = os.environ["AWS_S3_CUSTOM_DOMAIN"]
 AWS_QUERYSTRING_AUTH = False
@@ -204,3 +204,17 @@ if CI_CD_STAGE == DEV_STAGE:
     )
 
 CORS_ALLOW_METHODS = ["GET", "POST"]
+
+################################################################################
+# S3 Secret Private Files
+AWS_SECRET_BUCKET_NAME = os.environ["AWS_SECRET_BUCKET_NAME"]
+
+################################################################################
+# Celery
+REDIS_URL = os.environ["REDIS_URL"]
+
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
