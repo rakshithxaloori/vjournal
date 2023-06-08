@@ -16,14 +16,15 @@ from rest_framework.decorators import (
 from knox.auth import TokenAuthentication
 
 
+from vjournal.utils import BAD_REQUEST_RESPONSE
 from video.models import Video, Thumbnail
-from video.utils import create_presigned_s3_post
+from video.utils import create_presigned_s3_post, create_mediaconvert_job
 
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_upload_view(request):
+def upload_video_view(request):
     """
     This view is responsible for returning a presigned post url
     to the client. The client will then use this url to upload
@@ -58,6 +59,24 @@ def get_upload_view(request):
                 },
                 "video_id": video_id,
             },
+        },
+        status=status.HTTP_200_OK,
+    )
+
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def process_video_view(request):
+    video_id = request.data.get("video_id")
+    if not video_id or not Video.objects.filter(id=video_id).exists():
+        return BAD_REQUEST_RESPONSE
+
+    create_mediaconvert_job(video_id)
+
+    return JsonResponse(
+        {
+            "details": "Video uploaded successfully",
         },
         status=status.HTTP_200_OK,
     )

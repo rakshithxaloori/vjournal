@@ -34,6 +34,7 @@ class Video(models.Model):
         default=EMPTY,
         # db_index=True
     )
+    job_id = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.user.username} - {self.title}"
