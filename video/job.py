@@ -22,13 +22,9 @@ job_settings = {
                                 "FramerateControl": "SPECIFIED",
                                 "FramerateNumerator": 30,
                                 "FramerateDenominator": 1,
-                                "ParNumerator": 16,
-                                "ParDenominator": 9,
                                 "ParControl": "SPECIFIED",
                             },
                         },
-                        "Width": 1280,
-                        "Height": 720,
                     },
                     "ContainerSettings": {"Container": "MPD"},
                     "AudioDescriptions": [
