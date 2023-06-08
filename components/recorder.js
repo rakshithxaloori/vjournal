@@ -22,12 +22,13 @@ const VideoRecorder = ({ setError }) => {
   const mediaRecorderRef = useRef(null);
   const previewRef = useRef(null);
 
+  let localVideoChunks = useRef([]);
+
   const [permission, setPermission] = useState(false);
   const [streamStatus, setStreamStatus] = useState(STREAM_STATUS.INACTIVE);
   const [stream, setStream] = useState(null);
   const [recordedBlob, setRecordedBlob] = useState(null); // recorded video blob
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
-  const [videoChunks, setVideoChunks] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
@@ -39,10 +40,10 @@ const VideoRecorder = ({ setError }) => {
 
   useEffect(() => {
     // Stop the recording if max recording time is reached
-    if (videoChunks.length > MAX_RECORD_TIME / TIME_SLICE) {
+    if (localVideoChunks.current.length > MAX_RECORD_TIME / TIME_SLICE) {
       stopRecording();
     }
-  }, [videoChunks]);
+  }, [localVideoChunks.current.length]);
 
   useEffect(() => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -99,7 +100,6 @@ const VideoRecorder = ({ setError }) => {
   };
 
   const stopStream = () => {
-    console.log("Stopping stream", stream);
     if (stream === null) return;
     stream.getTracks().forEach((track) => track.stop());
     setStream(null);
@@ -115,7 +115,6 @@ const VideoRecorder = ({ setError }) => {
     mediaRecorderRef.current = media;
     mediaRecorderRef.current.start(TIME_SLICE);
 
-    console.log(mediaRecorderRef.current.state);
     mediaRecorderRef.current.addEventListener(
       "dataavailable",
       handleDataAvailable
@@ -125,10 +124,13 @@ const VideoRecorder = ({ setError }) => {
   const stopRecording = () => {
     setStreamStatus(STREAM_STATUS.RECORDED);
 
+    if (localVideoChunks.current.length === 0) {
+      mediaRecorderRef.current.requestData();
+    }
     mediaRecorderRef.current.stop();
 
     mediaRecorderRef.current.onstop = () => {
-      const videoBlob = new Blob(videoChunks, {
+      const videoBlob = new Blob(localVideoChunks.current, {
         type: MIME_TYPE,
         lastModified: Date.now(),
         name: "video.webm", // TODO
@@ -137,9 +139,8 @@ const VideoRecorder = ({ setError }) => {
 
       setRecordedBlob(videoBlob);
       setRecordedVideoUrl(videoUrl);
-      console.log(videoBlob);
-      console.log(videoUrl);
-      setVideoChunks([]);
+      localVideoChunks.current = [];
+
       mediaRecorderRef.current.removeEventListener(
         "dataavailable",
         handleDataAvailable
@@ -147,13 +148,10 @@ const VideoRecorder = ({ setError }) => {
     };
   };
 
-  let localVideoChunks = [];
   const handleDataAvailable = (event) => {
-    // TODO less than 10 seconds(timeslice) is throwing error
     if (typeof event.data === "undefined") return;
     if (event.data.size === 0) return;
-    localVideoChunks.push(event.data);
-    setVideoChunks(localVideoChunks);
+    localVideoChunks.current.push(event.data);
   };
 
   const upload = async () => {
