@@ -12,7 +12,7 @@ const Footer = () => {
     <Box
       sx={{
         padding: 3,
-        width: "100%",
+        // width: "100%",
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",

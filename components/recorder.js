@@ -34,6 +34,9 @@ const VideoRecorder = ({ setError }) => {
   useEffect(() => {
     startStream();
     return () => {
+      // TODO
+      // stream is null when we click on home
+      console.log("unmounting");
       stopStream();
     };
   }, []);
@@ -46,6 +49,7 @@ const VideoRecorder = ({ setError }) => {
   }, [localVideoChunks.current.length]);
 
   useEffect(() => {
+    console.log("stream changed");
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -100,6 +104,7 @@ const VideoRecorder = ({ setError }) => {
   };
 
   const stopStream = () => {
+    console.log("stopping stream", stream);
     if (stream === null) return;
     stream.getTracks().forEach((track) => track.stop());
     setStream(null);
@@ -245,7 +250,7 @@ export default VideoRecorder;
 const videoStyle = {
   transform: "scaleX(-1)",
   height: "70vh",
-  aspectRatio: "16/9",
-  objectFit: "cover",
+  // aspectRatio: "16/9",
+  // objectFit: "cover",
   borderRadius: "20px",
 };

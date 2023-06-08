@@ -1,8 +1,12 @@
 import Head from "next/head";
+import { getServerSession } from "next-auth/next";
 
 import Typography from "@mui/material/Typography";
 
-export default function Home() {
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { createServerAPIKit, networkError } from "@/utils/APIKit";
+
+export default function Home({ videos }) {
   return (
     <>
       <Head>
@@ -15,7 +19,42 @@ export default function Home() {
         <Typography variant="h4" component="h4" color="primary">
           VJournal
         </Typography>
+        <Typography variant="h6" component="h6" color="primary">
+          Videos {videos?.length}
+        </Typography>
+        {videos?.map((video) => (
+          <Typography
+            key={video.id}
+            variant="body1"
+            component="p"
+            color="primary"
+          >
+            {video.title}
+          </Typography>
+        ))}
       </main>
     </>
   );
 }
+
+export const getServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session?.token_key) {
+    try {
+      const APIKit = await createServerAPIKit(session.token_key);
+      // APIKit.get("/authentication/open/"); // Don't have to wait for this
+      const response = await APIKit.post("/video/list/", { index: 0 });
+      const { videos } = response.data.payload;
+      return {
+        props: {
+          videos,
+        },
+      };
+    } catch (e) {
+      return { props: { error: networkError(e) } };
+    }
+  }
+  return {
+    props: {},
+  };
+};
