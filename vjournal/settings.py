@@ -207,7 +207,8 @@ CORS_ALLOW_METHODS = ["GET", "POST"]
 
 ################################################################################
 # S3 Secret Private Files
-AWS_SECRET_BUCKET_NAME = os.environ["AWS_SECRET_BUCKET_NAME"]
+AWS_INPUT_BUCKET_NAME = os.environ["AWS_INPUT_BUCKET_NAME"]
+AWS_OUTPUT_BUCKET_NAME = os.environ["AWS_OUTPUT_BUCKET_NAME"]
 
 ################################################################################
 # Celery
@@ -226,3 +227,10 @@ AWS_MEDIACONVERT_SECRET_ACCESS_KEY = os.environ["AWS_MEDIACONVERT_SECRET_ACCESS_
 AWS_MEDIACONVERT_REGION_NAME = os.environ["AWS_MEDIACONVERT_REGION_NAME"]
 AWS_MEDIACONVERT_ENDPOINT_URL = os.environ["AWS_MEDIACONVERT_ENDPOINT_URL"]
 AWS_MEDIACONVERT_ROLE_ARN = os.environ["AWS_MEDIACONVERT_ROLE_ARN"]
+
+################################################################################
+# AWS SNS
+AWS_SNS_ACCESS_KEY_ID = os.environ["AWS_SNS_ACCESS_KEY_ID"]
+AWS_SNS_SECRET_ACCESS_KEY = os.environ["AWS_SNS_SECRET_ACCESS_KEY"]
+AWS_SNS_TOPIC_ARN = os.environ["AWS_SNS_TOPIC_ARN"]
+AWS_SNS_REGION_NAME = os.environ["AWS_SNS_REGION_NAME"]

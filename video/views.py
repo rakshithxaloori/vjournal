@@ -1,7 +1,10 @@
 import uuid
+import json
 from datetime import datetime
 
-from django.http import JsonResponse
+from django.conf import settings
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 from rest_framework import status
@@ -17,8 +20,9 @@ from knox.auth import TokenAuthentication
 
 
 from vjournal.utils import BAD_REQUEST_RESPONSE
-from video.models import Video, Thumbnail
-from video.utils import create_presigned_s3_post, create_mediaconvert_job
+from video.models import Video
+from video.utils import create_presigned_s3_post, create_mediaconvert_job, sns_client
+from video.serializer import VideoShortSerializer, VideoLongSerializer
 
 
 @api_view(["POST"])
@@ -80,3 +84,54 @@ def process_video_view(request):
         },
         status=status.HTTP_200_OK,
     )
+
+
+VIDEOS_FETCH_COUNT = 10
+
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_videos_view(request):
+    index = request.data.get("index", 0)
+    videos = Video.objects.filter(user=request.user)[
+        index * VIDEOS_FETCH_COUNT : (index + 1) * VIDEOS_FETCH_COUNT
+    ]
+    serializer = VideoShortSerializer(videos, many=True)
+    return JsonResponse(
+        {
+            "details": "Videos retrieved successfully",
+            "payload": {"videos": serializer.data},
+        },
+        status=status.HTTP_200_OK,
+    )
+
+
+@csrf_exempt
+def mediaconvert_sns_view(request):
+    json_data = json.loads(request.body)
+    if json_data["Type"] == "SubscriptionConfirmation":
+        # Confirm subscription
+        response = sns_client.confirm_subscription(
+            TopicArn=settings.AWS_SNS_TOPIC_ARN, Token=json_data["Token"]
+        )
+        if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
+            print("HTTPStatusCode != 200")
+            print(response)
+
+    else:
+        try:
+            message = json.loads(json_data["Message"])
+            input_url = message["input_url"]
+            jobID = message["jobID"]
+            duration = message["fullDetails"]["outputGroupDetails"][0]["outputDetails"][
+                0
+            ]["durationInMs"]
+            videoDetails = message["fullDetails"]["outputGroupDetails"][0][
+                "outputDetails"
+            ][0]["videoDetails"]
+
+        except Exception as e:
+            print("EXCEPTION", e)
+
+    return HttpResponse(status=status.HTTP_200_OK)
