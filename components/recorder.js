@@ -169,9 +169,11 @@ const VideoRecorder = ({ setError }) => {
           console.log(progress);
           setUploadProgress(progress.progress * 100);
         },
-        () => {
+        async () => {
           console.log("done");
-          // TODO make API request to update video status to "uploaded"
+          await APIKit.post("/api/video/process/", {
+            video_id,
+          });
         },
         (error) => {
           {
