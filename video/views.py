@@ -35,7 +35,12 @@ def upload_video_view(request):
     the file directly to the S3 bucket.
     """
     # TODO limit to only one upload per day
-    file_size = request.data.get("file_size")
+    file_size = request.data.get("file_size", None)
+    input_width = request.data.get("video_width", None)
+    input_height = request.data.get("video_height", None)
+
+    if None in [file_size, input_width, input_height]:
+        return BAD_REQUEST_RESPONSE
 
     # Create a uuid for the video
     video_id = uuid.uuid4()
@@ -47,6 +52,8 @@ def upload_video_view(request):
         user=request.user,
         title=f"{request.user.username} on {datetime.now().strftime('%Y-%m-%d')}",
         file_path=file_path,
+        input_width=input_width,
+        input_height=input_height,
     )
 
     # Generate a presigned post url

@@ -68,6 +68,41 @@ def create_mediaconvert_job(video_id):
         "Destination"
     ] = destination_path
 
+    iw = video.input_width
+    ih = video.input_height
+
+    if iw / ih < 16 / 9:
+        ow = iw
+        oh = iw * 9 / 16
+        x_offset = 0
+        y_offset = (ih - oh) / 2
+    elif iw / ih > 16 / 9:
+        ow = ih * 16 / 9
+        oh = ih
+        x_offset = (iw - ow) / 2
+        y_offset = 0
+
+    ow = int(ow)
+    oh = int(oh)
+    x_offset = int(x_offset)
+    y_offset = int(y_offset)
+
+    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Width"] = ow
+    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Height"] = oh
+
+    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"][
+        "Width"
+    ] = ow
+    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"][
+        "Height"
+    ] = oh
+    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"][
+        "X"
+    ] = x_offset
+    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"][
+        "Y"
+    ] = y_offset
+
     response = mediaconvert_client.create_job(
         Role=settings.AWS_MEDIACONVERT_ROLE_ARN,
         Settings=job_settings,

@@ -34,6 +34,8 @@ class Video(models.Model):
         default=EMPTY,
         # db_index=True
     )
+    input_width = models.PositiveIntegerField()
+    input_height = models.PositiveIntegerField()
     job_id = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self) -> str:

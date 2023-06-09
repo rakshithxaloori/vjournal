@@ -12,6 +12,7 @@ job_settings = {
             "Outputs": [
                 {
                     "VideoDescription": {
+                        "Crop": {},
                         "CodecSettings": {
                             "Codec": "H_264",
                             "H264Settings": {
@@ -23,7 +24,7 @@ job_settings = {
                                 "FramerateNumerator": 30,
                                 "FramerateDenominator": 1,
                             },
-                        }
+                        },
                     },
                     "ContainerSettings": {"Container": "MPD"},
                     "AudioDescriptions": [
