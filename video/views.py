@@ -24,6 +24,7 @@ from vjournal.utils import BAD_REQUEST_RESPONSE
 from video.models import Video
 from video.utils import create_presigned_s3_post, create_mediaconvert_job, sns_client
 from video.serializer import VideoShortSerializer, VideoLongSerializer
+from video.tasks import del_objects_from_s3_task
 
 
 @api_view(["POST"])
@@ -115,6 +116,28 @@ def get_videos_view(request):
     )
 
 
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_video_detail_view(request):
+    video_id = request.data.get("video_id", None)
+    if video_id is None:
+        return BAD_REQUEST_RESPONSE
+
+    try:
+        video = Video.objects.get(id=video_id)
+        serializer = VideoLongSerializer(video)
+        return JsonResponse(
+            {
+                "details": "Video retrieved successfully",
+                "payload": {"video": serializer.data},
+            },
+            status=status.HTTP_200_OK,
+        )
+    except Video.DoesNotExist:
+        return BAD_REQUEST_RESPONSE
+
+
 @csrf_exempt
 def mediaconvert_sns_view(request):
     json_data = json.loads(request.body)
@@ -150,7 +173,9 @@ def mediaconvert_sns_view(request):
 
             # Update the video
             try:
+                # Delete the input video
                 video = Video.objects.get(id=video_id, job_id=job_id)
+                del_objects_from_s3_task.delay(video.file_path)
                 video.file_path = file_path
                 video.status = Video.READY
                 video.duration_in_ms = duration_in_ms
