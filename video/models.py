@@ -27,19 +27,26 @@ class Video(models.Model):
 
     title = models.CharField(max_length=255)
     file_path = models.URLField()
-    duration = models.PositiveIntegerField(null=True, blank=True)  # in seconds
     status = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,
         default=EMPTY,
         # db_index=True
     )
-    input_width = models.PositiveIntegerField()
-    input_height = models.PositiveIntegerField()
+
+    input_width_in_px = models.PositiveIntegerField()
+    input_height_in_px = models.PositiveIntegerField()
+
     job_id = models.CharField(max_length=255, null=True, blank=True)
+    duration_in_ms = models.PositiveIntegerField(null=True, blank=True)
+    output_width_in_px = models.PositiveIntegerField(null=True, blank=True)
+    output_height_in_px = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.user.username} - {self.title}"
+        return f"{self.user.username} | {self.title} | {self.status}"
+
+    class Meta:
+        ordering = ["-created_at"]
 
 
 # Thumbnail model

@@ -1,3 +1,4 @@
+import re
 import uuid
 import json
 from datetime import datetime
@@ -36,10 +37,10 @@ def upload_video_view(request):
     """
     # TODO limit to only one upload per day
     file_size = request.data.get("file_size", None)
-    input_width = request.data.get("video_width", None)
-    input_height = request.data.get("video_height", None)
+    input_width_in_px = request.data.get("video_width", None)
+    input_height_in_px = request.data.get("video_height", None)
 
-    if None in [file_size, input_width, input_height]:
+    if None in [file_size, input_width_in_px, input_height_in_px]:
         return BAD_REQUEST_RESPONSE
 
     # Create a uuid for the video
@@ -52,8 +53,8 @@ def upload_video_view(request):
         user=request.user,
         title=f"{request.user.username} on {datetime.now().strftime('%Y-%m-%d')}",
         file_path=file_path,
-        input_width=input_width,
-        input_height=input_height,
+        input_width_in_px=input_width_in_px,
+        input_height_in_px=input_height_in_px,
     )
 
     # Generate a presigned post url
@@ -124,21 +125,101 @@ def mediaconvert_sns_view(request):
         )
         if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
             print("HTTPStatusCode != 200")
-            print(response)
 
     else:
         try:
             message = json.loads(json_data["Message"])
-            input_url = message["input_url"]
-            jobID = message["jobID"]
-            duration = message["fullDetails"]["outputGroupDetails"][0]["outputDetails"][
-                0
-            ]["durationInMs"]
-            videoDetails = message["fullDetails"]["outputGroupDetails"][0][
-                "outputDetails"
-            ][0]["videoDetails"]
 
+            job_id = message["detail"]["jobId"]
+            video_id = message["detail"]["userMetadata"]["video_id"]
+            output_width_in_px = message["detail"]["outputGroupDetails"][0][
+                "outputDetails"
+            ][0]["videoDetails"]["widthInPx"]
+            output_height_in_px = message["detail"]["outputGroupDetails"][0][
+                "outputDetails"
+            ][0]["videoDetails"]["heightInPx"]
+            duration_in_ms = message["detail"]["outputGroupDetails"][0][
+                "outputDetails"
+            ][0]["durationInMs"]
+            file_path = message["detail"]["outputGroupDetails"][0]["playlistFilePaths"][
+                0
+            ]
+
+            # Remove s3://<bucket_name>/ using regex
+            file_path = re.sub(r"s3:\/\/[a-zA-Z0-9\-]+\/", "", file_path)
+
+            # Update the video
+            try:
+                video = Video.objects.get(id=video_id, job_id=job_id)
+                video.file_path = file_path
+                video.status = Video.READY
+                video.duration_in_ms = duration_in_ms
+                video.output_width_in_px = output_width_in_px
+                video.output_height_in_px = output_height_in_px
+
+                video.save(
+                    update_fields=[
+                        "file_path",
+                        "status",
+                        "duration_in_ms",
+                        "output_width_in_px",
+                        "output_height_in_px",
+                    ]
+                )
+
+            except Video.DoesNotExist:
+                print("Video.DoesNotExist", video_id, job_id)
         except Exception as e:
-            print("EXCEPTION", e)
+            print("Exception", e)
 
     return HttpResponse(status=status.HTTP_200_OK)
+
+
+# print("MESSAGE", message)
+# {
+#     "version": "0",
+#     "id": "f2400be6-153b-f4cd-f1e5-167a107d5936",
+#     "detail-type": "MediaConvert Job State Change",
+#     "source": "aws.mediaconvert",
+#     "account": "662294483096",
+#     "time": "2023-06-09T09:24:14Z",
+#     "region": "us-east-1",
+#     "resources": [
+#         "arn:aws:mediaconvert:us-east-1:662294483096:jobs/1686302650755-f71060"
+#     ],
+#     "detail": {
+#         "timestamp": 1686302653999,
+#         "accountId": "662294483096",
+#         "queue": "arn:aws:mediaconvert:us-east-1:662294483096:queues/Default",
+#         "jobId": "1686302650755-f71060",
+#         "status": "COMPLETE",
+#         "userMetadata": {
+#             "video_id": "4077aea4-44e5-453c-9af9-414e82e5e256"
+#         },
+#         "outputGroupDetails": [
+#             {
+#                 "outputDetails": [
+#                     {
+#                         "durationInMs": 3300,
+#                         "videoDetails": {
+#                             "widthInPx": 640,
+#                             "heightInPx": 360,
+#                             "averageBitrate": 750909,
+#                             "qvbrAvgQuality": 8.0,
+#                             "qvbrMinQuality": 7.67,
+#                             "qvbrMaxQuality": 8.0,
+#                             "qvbrMinQualityLocation": 2100,
+#                             "qvbrMaxQualityLocation": 0,
+#                         },
+#                     }
+#                 ],
+#                 "playlistFilePaths": [
+#                     "s3://vj-dev-output/videos/106732583620951074268/4077aea4-44e5-453c-9af9-414e82e5e256/4077aea4-44e5-453c-9af9-414e82e5e256.mpd"
+#                 ],
+#                 "type": "DASH_ISO_GROUP",
+#             }
+#         ],
+#         "paddingInserted": 0,
+#         "blackVideoDetected": 0,
+#     },
+# }

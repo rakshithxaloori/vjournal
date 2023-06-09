@@ -68,8 +68,8 @@ def create_mediaconvert_job(video_id):
         "Destination"
     ] = destination_path
 
-    iw = video.input_width
-    ih = video.input_height
+    iw = video.input_width_in_px
+    ih = video.input_height_in_px
 
     if iw / ih < 16 / 9:
         ow = iw
