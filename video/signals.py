@@ -8,7 +8,14 @@ from video.tasks import del_objects_from_s3_task
 
 @receiver(pre_delete, sender=Video)
 def delete_video_from_s3(sender, instance, **kwargs):
-    del_objects_from_s3_task.delay(instance.file_path)
+    username = instance.user.username
+    file_paths = [
+        f"videos/{username}/{instance.id}",
+        f"videos/{username}/{instance.id}/{instance.id}.mp4",
+        f"videos/{username}/{instance.id}/{instance.id}.mpd",
+    ]
+    for file_path in file_paths:
+        del_objects_from_s3_task.delay(file_path)
 
 
 @receiver(pre_delete, sender=Thumbnail)
