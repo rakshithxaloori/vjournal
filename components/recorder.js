@@ -9,7 +9,7 @@ import { createClientAPIKit, networkError, uploadToS3 } from "@/utils/APIKit";
 
 const MIME_TYPE = "video/webm;codecs=vp9,opus";
 const TIME_SLICE = 10 * 1000; // 10 seconds
-const MAX_RECORD_TIME = 15 * 60 * 1000; // 15 minutes
+const MAX_RECORD_TIME = 60 * 60 * 1000; // 60 minutes
 const STREAM_STATUS = {
   IDLE: "idle",
   RECORDING: "recording",
@@ -56,7 +56,7 @@ const VideoRecorder = ({ setError }) => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [stream]);
+  }, [stream, streamStatus]);
 
   const handleVisibilityChange = () => {
     if (streamStatus === STREAM_STATUS.RECORDING) return;
