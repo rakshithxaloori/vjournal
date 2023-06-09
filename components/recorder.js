@@ -27,6 +27,8 @@ const VideoRecorder = ({ setError }) => {
   const [permission, setPermission] = useState(false);
   const [streamStatus, setStreamStatus] = useState(STREAM_STATUS.INACTIVE);
   const [stream, setStream] = useState(null);
+  const [videoHeight, setVideoHeight] = useState(0);
+  const [videoWidth, setVideoWidth] = useState(0);
   const [recordedBlob, setRecordedBlob] = useState(null); // recorded video blob
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -114,6 +116,11 @@ const VideoRecorder = ({ setError }) => {
   };
 
   const startRecording = async () => {
+    // get video height and width
+    const videoTrack = stream.getVideoTracks()[0];
+    const { height, width } = videoTrack.getSettings();
+    setVideoHeight(height);
+    setVideoWidth(width);
     setStreamStatus(STREAM_STATUS.RECORDING);
 
     const media = new MediaRecorder(stream, { mimeType: MIME_TYPE });
@@ -160,10 +167,13 @@ const VideoRecorder = ({ setError }) => {
   };
 
   const upload = async () => {
+    if (!recordedBlob) return;
     try {
       const APIKit = await createClientAPIKit(session?.token_key);
       const response = await APIKit.post("/api/video/upload/", {
         file_size: recordedBlob.size,
+        video_height: videoHeight,
+        video_width: videoWidth,
       });
       const { s3_urls, video_id } = response.data.payload;
       const { video, thumbnail } = s3_urls;
@@ -250,7 +260,7 @@ export default VideoRecorder;
 const videoStyle = {
   transform: "scaleX(-1)",
   height: "70vh",
-  // aspectRatio: "16/9",
-  // objectFit: "cover",
+  aspectRatio: "16/9",
+  objectFit: "cover",
   borderRadius: "20px",
 };
