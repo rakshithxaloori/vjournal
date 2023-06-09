@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { getServerSession } from "next-auth/next";
 
 import Typography from "@mui/material/Typography";
@@ -23,14 +24,11 @@ export default function Home({ videos }) {
           Videos {videos?.length}
         </Typography>
         {videos?.map((video) => (
-          <Typography
-            key={video.id}
-            variant="body1"
-            component="p"
-            color="primary"
-          >
-            {video.title}
-          </Typography>
+          <Link key={video.id} href={`/journal/${video.id}`}>
+            <Typography variant="body1" component="p" color="primary">
+              {video.title}
+            </Typography>
+          </Link>
         ))}
       </main>
     </>
