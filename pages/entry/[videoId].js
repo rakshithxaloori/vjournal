@@ -2,16 +2,23 @@ import { getServerSession } from "next-auth/next";
 
 import { authOptions } from "pages/api/auth/[...nextauth]";
 
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 import { createServerAPIKit, networkError } from "@/utils/APIKit";
 
 const Journal = ({ video }) => {
   console.log(video);
   return (
-    <div>
-      <h1>Journal</h1>
-      <h2>{video.title}</h2>
+    <Box>
+      <Typography variant="h4" component="h4" color="primary">
+        Journal
+      </Typography>
+      <Typography variant="body1" color="primary">
+        {video.title}
+      </Typography>
       <video src={video.url} controls></video>
-    </div>
+    </Box>
   );
 };
 

@@ -24,7 +24,7 @@ export default function Home({ videos }) {
           Videos {videos?.length}
         </Typography>
         {videos?.map((video) => (
-          <Link key={video.id} href={`/journal/${video.id}`}>
+          <Link key={video.id} href={`/entry/${video.id}`}>
             <Typography variant="body1" component="p" color="primary">
               {video.title}
             </Typography>
