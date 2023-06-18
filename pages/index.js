@@ -1,13 +1,17 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { getServerSession } from "next-auth/next";
 
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { createServerAPIKit, networkError } from "@/utils/APIKit";
 
 export default function Home({ videos }) {
+  const router = useRouter();
   return (
     <>
       <Head>
@@ -20,9 +24,24 @@ export default function Home({ videos }) {
         <Typography variant="h4" component="h4" color="primary">
           VJournal
         </Typography>
-        <Typography variant="h6" component="h6" color="primary">
-          Videos {videos?.length}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <Typography variant="h6" component="h6" color="primary">
+            Videos {videos?.length}
+          </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => router.push("/new")}
+          >
+            New Entry
+          </Button>
+        </Box>
         {videos?.map((video) => (
           <Link key={video.id} href={`/entry/${video.id}`}>
             <Typography variant="body1" component="p" color="primary">
