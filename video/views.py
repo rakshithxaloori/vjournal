@@ -27,6 +27,9 @@ from video.serializer import VideoShortSerializer, VideoLongSerializer
 from video.tasks import del_objects_from_s3_task, create_thumbnail_instance_task
 
 
+VIDEOS_FETCH_COUNT = 10
+
+
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -36,7 +39,12 @@ def upload_video_view(request):
     to the client. The client will then use this url to upload
     the file directly to the S3 bucket.
     """
-    # TODO limit to only one upload per day
+    # Limit to only one upload per day
+    if request.user.videos.filter(created_at__gte=datetime.now().date()).count() >= 1:
+        return JsonResponse(
+            {"message": "You have already uploaded a video today."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
     file_size = request.data.get("file_size", None)
     input_width_in_px = request.data.get("video_width", None)
     input_height_in_px = request.data.get("video_height", None)
@@ -49,7 +57,7 @@ def upload_video_view(request):
     file_path = f"videos/{request.user.username}/{video_id}"
 
     # Create a new video
-    video = Video.objects.create(
+    Video.objects.create(
         id=video_id,
         user=request.user,
         title=f"{request.user.username} on {datetime.now().strftime('%Y-%m-%d')}",
@@ -82,7 +90,10 @@ def upload_video_view(request):
 @permission_classes([IsAuthenticated])
 def process_video_view(request):
     video_id = request.data.get("video_id")
-    if not video_id or not Video.objects.filter(id=video_id).exists():
+    if (
+        not video_id
+        or not Video.objects.filter(id=video_id, user=request.user).exists()
+    ):
         return BAD_REQUEST_RESPONSE
 
     create_mediaconvert_job(video_id)
@@ -93,9 +104,6 @@ def process_video_view(request):
         },
         status=status.HTTP_200_OK,
     )
-
-
-VIDEOS_FETCH_COUNT = 10
 
 
 @api_view(["POST"])
@@ -125,7 +133,7 @@ def get_video_detail_view(request):
         return BAD_REQUEST_RESPONSE
 
     try:
-        video = Video.objects.get(id=video_id)
+        video = Video.objects.get(id=video_id, user=request.user)
         serializer = VideoLongSerializer(video)
         return JsonResponse(
             {
