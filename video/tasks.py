@@ -36,3 +36,6 @@ def create_thumbnail_instance_task(video_id, file_path):
             Thumbnail.objects.create(user=user, video=video, file_path=file_path)
     except Video.DoesNotExist:
         pass
+
+
+# TODO after sometime check if the video is not uploaded

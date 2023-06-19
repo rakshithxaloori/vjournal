@@ -23,7 +23,7 @@ from knox.auth import TokenAuthentication
 from vjournal.utils import BAD_REQUEST_RESPONSE
 from video.models import Video
 from video.utils import create_presigned_s3_post, create_mediaconvert_job, sns_client
-from video.serializer import VideoShortSerializer, VideoLongSerializer
+from video.serializers import VideoShortSerializer, VideoLongSerializer
 from video.tasks import del_objects_from_s3_task, create_thumbnail_instance_task
 
 

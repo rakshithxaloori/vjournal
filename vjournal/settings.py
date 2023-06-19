@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "authentication",
     "video",
     "health",
+    "boss",
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    ### Boss App Middleware ###
+    "boss.middleware.SecretKeyMiddleware",
 ]
 
 ROOT_URLCONF = "vjournal.urls"
@@ -243,3 +246,7 @@ AWS_SNS_ACCESS_KEY_ID = os.environ["AWS_SNS_ACCESS_KEY_ID"]
 AWS_SNS_SECRET_ACCESS_KEY = os.environ["AWS_SNS_SECRET_ACCESS_KEY"]
 AWS_SNS_TOPIC_ARN = os.environ["AWS_SNS_TOPIC_ARN"]
 AWS_SNS_REGION_NAME = os.environ["AWS_SNS_REGION_NAME"]
+
+################################################################################
+# Boss
+BOSS_SECRET_KEY = os.environ["BOSS_SECRET_KEY"]

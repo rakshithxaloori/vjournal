@@ -16,7 +16,7 @@ s3_client = boto3.client(
 
 
 def create_presigned_s3_post(file_size, file_path):
-    EXPIRES_IN = 10 * 60
+    EXPIRES_IN = 60 * 60
     fields = {
         "Content-Type": "multipart/form-data",
     }
@@ -37,7 +37,7 @@ def create_presigned_s3_post(file_size, file_path):
 
 
 def create_presigned_url(file_path):
-    EXPIRES_IN = 60 * 60
+    EXPIRES_IN = 2 * 60 * 60
     url = s3_client.generate_presigned_url(
         ClientMethod="get_object",
         Params={"Bucket": settings.AWS_OUTPUT_BUCKET_NAME, "Key": file_path},

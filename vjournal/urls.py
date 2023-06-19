@@ -32,6 +32,7 @@ urlpatterns = [
     path("authentication/", include("authentication.urls")),
     path("video/", include("video.urls")),
     path("ht/", include("health.urls")),
+    path("boss/", include("boss.urls")),
 ]
 
 

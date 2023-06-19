@@ -66,6 +66,7 @@ class Thumbnail(models.Model):
 
 # Subtitles model
 class Subtitles(models.Model):
+    user = models.ForeignKey(User, related_name="subtitles", on_delete=models.CASCADE)
     video = models.OneToOneField(
         Video, related_name="subtitles", on_delete=models.CASCADE
     )
