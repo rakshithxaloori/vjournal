@@ -3,6 +3,7 @@ from django.conf import settings
 
 from vjournal.celery import app as celery_app
 from video.utils import s3_client
+from video.models import Video, Thumbnail
 
 
 def is_object_exists(bucket, path):
@@ -24,3 +25,14 @@ def del_objects_from_s3_task(file_path):
                 Bucket=bucket,
                 Key=file_path,
             )
+
+
+@celery_app.task
+def create_thumbnail_instance_task(video_id, file_path):
+    try:
+        video = Video.objects.get(id=video_id)
+        user = video.user
+        if is_object_exists(settings.AWS_OUTPUT_BUCKET_NAME, file_path):
+            Thumbnail.objects.create(user=user, video=video, file_path=file_path)
+    except Video.DoesNotExist:
+        pass

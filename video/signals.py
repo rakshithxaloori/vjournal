@@ -11,7 +11,8 @@ def delete_video_from_s3(sender, instance, **kwargs):
     username = instance.user.username
     file_paths = [
         f"videos/{username}/{instance.id}",
-        f"videos/{username}/{instance.id}/{instance.id}.mp4",
+        f"videos/{username}/{instance.id}/{instance.id}_video.mp4",
+        f"videos/{username}/{instance.id}/{instance.id}_audio.mp4",
         f"videos/{username}/{instance.id}/{instance.id}.mpd",
     ]
     for file_path in file_paths:

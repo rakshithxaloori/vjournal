@@ -27,6 +27,9 @@ job_settings = {
                         },
                     },
                     "ContainerSettings": {"Container": "MPD"},
+                    "NameModifier": "_video",
+                },
+                {
                     "AudioDescriptions": [
                         {
                             "CodecSettings": {
@@ -40,10 +43,37 @@ job_settings = {
                             "AudioSourceName": "Audio Selector 1",
                         }
                     ],
-                }
+                    "ContainerSettings": {"Container": "MPD"},
+                    "NameModifier": "_audio",
+                },
             ],
             "CustomName": "DASH Group",
-        }
+        },
+        {
+            "Name": "File Group",
+            "OutputGroupSettings": {
+                "Type": "FILE_GROUP_SETTINGS",
+                "FileGroupSettings": {},
+            },
+            "Outputs": [
+                {
+                    "VideoDescription": {
+                        "CodecSettings": {
+                            "Codec": "FRAME_CAPTURE",
+                            "FrameCaptureSettings": {
+                                "MaxCaptures": 1,
+                                "FramerateNumerator": 1,
+                                "FramerateDenominator": 1,
+                                "Quality": 95,
+                            },
+                        },
+                        "Crop": {},
+                    },
+                    "ContainerSettings": {"Container": "RAW"},
+                    "NameModifier": "_default",
+                }
+            ],
+        },
     ],
     "TimecodeConfig": {"Source": "ZEROBASED"},
     "Inputs": [

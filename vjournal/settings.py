@@ -211,6 +211,15 @@ AWS_INPUT_BUCKET_NAME = os.environ["AWS_INPUT_BUCKET_NAME"]
 AWS_OUTPUT_BUCKET_NAME = os.environ["AWS_OUTPUT_BUCKET_NAME"]
 
 ################################################################################
+# Knox
+from datetime import timedelta
+
+REST_KNOX = {
+    "TOKEN_TTL": timedelta(days=30),
+    "AUTO_REFRESH": True,
+}
+
+################################################################################
 # Celery
 REDIS_URL = os.environ["REDIS_URL"]
 

@@ -60,13 +60,19 @@ mediaconvert_client = boto3.client(
 def create_mediaconvert_job(video_id):
     video = Video.objects.get(id=video_id)
 
-    source_path = f"s3://{settings.AWS_INPUT_BUCKET_NAME}/{video.file_path}"
-    destination_path = f"s3://{settings.AWS_OUTPUT_BUCKET_NAME}/{video.file_path}/"
+    source = f"s3://{settings.AWS_INPUT_BUCKET_NAME}/{video.file_path}"
+    video_destination = f"s3://{settings.AWS_OUTPUT_BUCKET_NAME}/{video.file_path}/"
 
-    job_settings["Inputs"][0]["FileInput"] = source_path
+    thumbnail_path = video.file_path.replace("videos", "thumbnails")
+    thumbnail_destination = f"s3://{settings.AWS_OUTPUT_BUCKET_NAME}/{thumbnail_path}/"
+
+    job_settings["Inputs"][0]["FileInput"] = source
     job_settings["OutputGroups"][0]["OutputGroupSettings"]["DashIsoGroupSettings"][
         "Destination"
-    ] = destination_path
+    ] = video_destination
+    job_settings["OutputGroups"][1]["OutputGroupSettings"]["FileGroupSettings"][
+        "Destination"
+    ] = thumbnail_destination
 
     iw = video.input_width_in_px
     ih = video.input_height_in_px
@@ -87,21 +93,26 @@ def create_mediaconvert_job(video_id):
     x_offset = int(x_offset)
     y_offset = int(y_offset)
 
-    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Width"] = ow
-    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Height"] = oh
+    resolution = {
+        "Width": ow,
+        "Height": oh,
+    }
 
-    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"][
-        "Width"
-    ] = ow
-    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"][
-        "Height"
-    ] = oh
-    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"][
-        "X"
-    ] = x_offset
-    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"][
-        "Y"
-    ] = y_offset
+    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"].update(resolution)
+    job_settings["OutputGroups"][1]["Outputs"][0]["VideoDescription"].update(resolution)
+
+    crop = {
+        "Width": ow,
+        "Height": oh,
+        "X": x_offset,
+        "Y": y_offset,
+    }
+    job_settings["OutputGroups"][0]["Outputs"][0]["VideoDescription"]["Crop"].update(
+        crop
+    )
+    job_settings["OutputGroups"][1]["Outputs"][0]["VideoDescription"]["Crop"].update(
+        crop
+    )
 
     response = mediaconvert_client.create_job(
         Role=settings.AWS_MEDIACONVERT_ROLE_ARN,

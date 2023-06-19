@@ -24,7 +24,7 @@ from vjournal.utils import BAD_REQUEST_RESPONSE
 from video.models import Video
 from video.utils import create_presigned_s3_post, create_mediaconvert_job, sns_client
 from video.serializer import VideoShortSerializer, VideoLongSerializer
-from video.tasks import del_objects_from_s3_task
+from video.tasks import del_objects_from_s3_task, create_thumbnail_instance_task
 
 
 @api_view(["POST"])
@@ -155,28 +155,32 @@ def mediaconvert_sns_view(request):
 
             job_id = message["detail"]["jobId"]
             video_id = message["detail"]["userMetadata"]["video_id"]
-            output_width_in_px = message["detail"]["outputGroupDetails"][0][
+            video_output_group_details = message["detail"]["outputGroupDetails"][0]
+            video_output_details = video_output_group_details["outputDetails"][0]
+            video_details = video_output_details["videoDetails"]
+
+            output_width_in_px = video_details["widthInPx"]
+            output_height_in_px = video_details["heightInPx"]
+            duration_in_ms = video_output_details["durationInMs"]
+            video_file_path = video_output_group_details["playlistFilePaths"][0]
+            thumbnail_file_path = message["detail"]["outputGroupDetails"][1][
                 "outputDetails"
-            ][0]["videoDetails"]["widthInPx"]
-            output_height_in_px = message["detail"]["outputGroupDetails"][0][
-                "outputDetails"
-            ][0]["videoDetails"]["heightInPx"]
-            duration_in_ms = message["detail"]["outputGroupDetails"][0][
-                "outputDetails"
-            ][0]["durationInMs"]
-            file_path = message["detail"]["outputGroupDetails"][0]["playlistFilePaths"][
-                0
-            ]
+            ][0]["outputFilePaths"][0]
 
             # Remove s3://<bucket_name>/ using regex
-            file_path = re.sub(r"s3:\/\/[a-zA-Z0-9\-]+\/", "", file_path)
+            video_file_path = re.sub(r"s3:\/\/[a-zA-Z0-9\-]+\/", "", video_file_path)
+            thumbnail_file_path = re.sub(
+                r"s3:\/\/[a-zA-Z0-9\-]+\/", "", thumbnail_file_path
+            )
 
             # Update the video
             try:
                 # Delete the input video
                 video = Video.objects.get(id=video_id, job_id=job_id)
                 del_objects_from_s3_task.delay(video.file_path)
-                video.file_path = file_path
+                # create_thumbnail_instance_task.delay(video_id, thumbnail_file_path)
+                create_thumbnail_instance_task(video_id, thumbnail_file_path)
+                video.file_path = video_file_path
                 video.status = Video.READY
                 video.duration_in_ms = duration_in_ms
                 video.output_width_in_px = output_width_in_px
@@ -203,46 +207,61 @@ def mediaconvert_sns_view(request):
 # print("MESSAGE", message)
 # {
 #     "version": "0",
-#     "id": "f2400be6-153b-f4cd-f1e5-167a107d5936",
+#     "id": "3587f103-4968-c0fd-84b4-9ede4e38e586",
 #     "detail-type": "MediaConvert Job State Change",
 #     "source": "aws.mediaconvert",
 #     "account": "662294483096",
-#     "time": "2023-06-09T09:24:14Z",
+#     "time": "2023-06-19T07:53:43Z",
 #     "region": "us-east-1",
 #     "resources": [
-#         "arn:aws:mediaconvert:us-east-1:662294483096:jobs/1686302650755-f71060"
+#         "arn:aws:mediaconvert:us-east-1:662294483096:jobs/1687161219181-jv2nya"
 #     ],
 #     "detail": {
-#         "timestamp": 1686302653999,
+#         "timestamp": 1687161223347,
 #         "accountId": "662294483096",
 #         "queue": "arn:aws:mediaconvert:us-east-1:662294483096:queues/Default",
-#         "jobId": "1686302650755-f71060",
+#         "jobId": "1687161219181-jv2nya",
 #         "status": "COMPLETE",
-#         "userMetadata": {
-#             "video_id": "4077aea4-44e5-453c-9af9-414e82e5e256"
-#         },
+#         "userMetadata": {"video_id": "05c691ad-1fb1-43ab-878a-7b76e99a1239"},
 #         "outputGroupDetails": [
 #             {
 #                 "outputDetails": [
 #                     {
-#                         "durationInMs": 3300,
+#                         "durationInMs": 17333,
 #                         "videoDetails": {
 #                             "widthInPx": 640,
 #                             "heightInPx": 360,
-#                             "averageBitrate": 750909,
+#                             "averageBitrate": 811208,
 #                             "qvbrAvgQuality": 8.0,
 #                             "qvbrMinQuality": 7.67,
 #                             "qvbrMaxQuality": 8.0,
-#                             "qvbrMinQualityLocation": 2100,
+#                             "qvbrMinQualityLocation": 1400,
 #                             "qvbrMaxQualityLocation": 0,
+#                         },
+#                     },
+#                     {"durationInMs": 17322},
+#                 ],
+#                 "playlistFilePaths": [
+#                     "s3://vj-dev-output/videos/106732583620951074268/05c691ad-1fb1-43ab-878a-7b76e99a1239/05c691ad-1fb1-43ab-878a-7b76e99a1239.mpd"
+#                 ],
+#                 "type": "DASH_ISO_GROUP",
+#             },
+#             {
+#                 "outputDetails": [
+#                     {
+#                         "outputFilePaths": [
+#                             "s3://vj-dev-output/thumbnails/106732583620951074268/05c691ad-1fb1-43ab-878a-7b76e99a1239/05c691ad-1fb1-43ab-878a-7b76e99a1239_default.0000000.jpg"
+#                         ],
+#                         "durationInMs": 1000,
+#                         "videoDetails": {
+#                             "widthInPx": 640,
+#                             "heightInPx": 360,
+#                             "averageBitrate": 227296,
 #                         },
 #                     }
 #                 ],
-#                 "playlistFilePaths": [
-#                     "s3://vj-dev-output/videos/106732583620951074268/4077aea4-44e5-453c-9af9-414e82e5e256/4077aea4-44e5-453c-9af9-414e82e5e256.mpd"
-#                 ],
-#                 "type": "DASH_ISO_GROUP",
-#             }
+#                 "type": "FILE_GROUP",
+#             },
 #         ],
 #         "paddingInserted": 0,
 #         "blackVideoDetected": 0,

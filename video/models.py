@@ -51,19 +51,6 @@ class Video(models.Model):
 
 # Thumbnail model
 class Thumbnail(models.Model):
-    EMPTY = "E"
-    UPLOADING = "U"
-    PROCESSING = "P"
-    READY = "R"
-    FAILED = "F"
-    STATUS_CHOICES = [
-        (EMPTY, "Empty"),
-        (UPLOADING, "Uploading"),
-        (PROCESSING, "Processing"),
-        (READY, "Ready"),
-        (FAILED, "Failed"),
-    ]
-
     user = models.ForeignKey(User, related_name="thumbnails", on_delete=models.CASCADE)
     video = models.OneToOneField(
         Video, related_name="thumbnail", on_delete=models.CASCADE
@@ -72,12 +59,6 @@ class Thumbnail(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     file_path = models.URLField()
-    status = models.CharField(
-        max_length=1,
-        choices=STATUS_CHOICES,
-        default=EMPTY,
-        # db_index=True,
-    )
 
     def __str__(self) -> str:
         return f"{self.user.username} - {self.video.title}"
