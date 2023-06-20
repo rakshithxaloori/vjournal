@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.http import JsonResponse
 
 
@@ -7,19 +6,19 @@ from rest_framework.decorators import api_view
 
 from vjournal.utils import BAD_REQUEST_RESPONSE
 from video.models import Video, Subtitles
-from boss.serializers import VideoSerializer
+from boss.serializers import AudioURLsSerializer
 from boss.utils import create_presigned_s3_post
 
 
 @api_view(["GET"])
 def get_audio_urls_view(request):
     # Get all videos that don't have subtitles
-    videos = Video.objects.filter(subtitle__isnull=True)
-    serializer = VideoSerializer(videos, many=True)
+    videos = Video.objects.filter(subtitles__isnull=True)
+    serializer = AudioURLsSerializer(videos, many=True)
     return JsonResponse(
         {
             "details": "Videos retrieved successfully",
-            "payload": {"videos": serializer.data},
+            "payload": {"audios": serializer.data},
         },
         status=status.HTTP_200_OK,
     )

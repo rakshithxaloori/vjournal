@@ -5,7 +5,7 @@ from video.models import Video
 from video.utils import create_presigned_url
 
 
-class VideoSerializer(ModelSerializer):
+class AudioURLsSerializer(ModelSerializer):
     audio_url = SerializerMethodField()
 
     class Meta:
