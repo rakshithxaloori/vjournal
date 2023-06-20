@@ -1,6 +1,8 @@
 from src.download import get_audio_urls, download_video
 from src.convert import convert_to_mp3
 from src.transcribe import transcribe_audio
+from src.token_count import get_token_count
+from src.summary import get_summary
 
 
 def pipeline():
@@ -17,5 +19,13 @@ def pipeline():
         print(f"Converted {mp4_file_path} to {mp3_file_path}")
 
         # Transcribe
-        subtitle_filepath, language = transcribe_audio(mp3_file_path)
+        subtitle_filepath, transcription, language = transcribe_audio(mp3_file_path)
         print(f"Transcribed {mp3_file_path} to {subtitle_filepath} in {language}")
+
+        # Token Count
+        token_count = get_token_count(transcription)
+        print(f"Token count for {subtitle_filepath} is {token_count}")
+
+        # Summary
+        summary = get_summary(transcription, token_count)
+        print(f"Summary for {subtitle_filepath} is '{summary}'")

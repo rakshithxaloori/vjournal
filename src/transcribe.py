@@ -25,7 +25,7 @@ def transcribe_audio(audio_file_path):
                 f"{segment['text'].strip()}\n\n"
             )
 
-    return subtitle_file_path, result["language"]
+    return subtitle_file_path, result["text"], result["language"]
 
 
 # print(result)
