@@ -1,6 +1,6 @@
-from download import get_audio_urls, download_video
-from convert import convert_to_mp3
-from transcribe import transcribe_audio
+from src.download import get_audio_urls, download_video
+from src.convert import convert_to_mp3
+from src.transcribe import transcribe_audio
 
 
 def pipeline():
