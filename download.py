@@ -10,6 +10,10 @@ load_dotenv()  # take environment variables from .env.
 AUDIO_GET_ENDPOINT = os.environ["AUDIO_GET_ENDPOINT"]
 BOSS_SECRET_KEY = os.environ["BOSS_SECRET_KEY"]
 
+# Create directory for mp4s if it doesn't exist
+if not os.path.exists("mp4s"):
+    os.makedirs("mp4s")
+
 
 def download_video(uuid, presigned_url):
     file_name = f"{uuid}.mp4"
