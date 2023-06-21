@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 
@@ -12,6 +13,7 @@ import { STREAM_STATUS } from "@/utils/stream";
 import FlashMessage from "@/components/flashMessage";
 
 const New = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const {
     permission,
@@ -62,24 +64,18 @@ const New = () => {
         recordedBlob,
         video,
         (progress) => {
-          console.log(progress);
           setUploadProgress(progress.progress * 100);
         },
         async () => {
-          console.log("done");
           await APIKit.post("/api/video/process/", {
             video_id,
           });
+          router.push("/");
         },
-        (error) => {
-          {
-            console.log(error);
-          }
-        }
+        (error) => setMessage(error)
       );
     } catch (e) {
       setMessage(networkError(e));
-    } finally {
       setDisabled(false);
     }
   };
@@ -128,7 +124,9 @@ const New = () => {
             </Button>
           ) : streamStatus === STREAM_STATUS.RECORDED ? (
             <Button onClick={upload} variant="contained">
-              {disabled ? `Uploading ${uploadProgress}...` : "Upload"}
+              {disabled
+                ? `Uploading ${uploadProgress.toFixed(0)}%...`
+                : "Upload"}
             </Button>
           ) : null
         ) : (

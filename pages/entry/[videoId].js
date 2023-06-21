@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRef, useEffect } from "react";
 import { getServerSession } from "next-auth/next";
 import dynamic from "next/dynamic";
@@ -33,48 +34,58 @@ const Entry = ({ video }) => {
   }, []);
 
   return (
-    // TODO head - {username}'s entry on {date}
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
-    >
+    <>
+      <Head>
+        <title>
+          {video?.title} | {getPrettyDate(video.created_at)}
+        </title>
+        <meta name="description" content="Personal video journaling app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Box
         sx={{
-          width: "70vw",
           display: "flex",
           flexDirection: "column",
-          alignSelf: "center",
+          height: "100%",
+          width: "100%",
         }}
       >
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="h4" color="primary" sx={{ mb: 1 }}>
-            {getPrettyDate(video.created_at)}
-          </Typography>
-          <Typography variant="h6" color="textSecondary">
-            {video.title}
-          </Typography>
-        </Box>
-        <video ref={videoRef} autoPlay controls style={videoStyle} />
-        {/* Typography with a grey background that shows video.summary */}
         <Box
           sx={{
-            width: "100%",
-            mt: 2,
+            width: "70vw",
+            display: "flex",
+            flexDirection: "column",
+            alignSelf: "center",
           }}
         >
-          <Typography variant="body1" color="primary">
-            Summary
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            {video.summary}
-          </Typography>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="h4" color="primary" sx={{ mb: 1 }}>
+              {getPrettyDate(video.created_at)}
+            </Typography>
+            <Typography variant="h6" color="textSecondary">
+              {video.title}
+            </Typography>
+          </Box>
+          <video ref={videoRef} autoPlay controls style={videoStyle} />
+          {video.summary && (
+            <Box
+              sx={{
+                width: "100%",
+                mt: 2,
+              }}
+            >
+              <Typography variant="body1" color="primary">
+                Summary
+              </Typography>
+              <Typography variant="body1" color="textSecondary">
+                {video.summary}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

@@ -11,6 +11,8 @@ import Button from "@mui/material/Button";
 
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { createServerAPIKit, networkError } from "@/utils/APIKit";
+import { ENTRY_STATUS } from "@/utils/codes";
+import FlashMessage from "@/components/flashMessage";
 
 const THUMBNAIL_WIDTH = 300;
 const ASPECT_RATIO = 16 / 9;
@@ -20,6 +22,7 @@ export default function Home({ videos }) {
   const router = useRouter();
 
   const [index, setIndex] = useState(0);
+  const [message, setMessage] = useState("");
 
   const openEntry = (id) => {
     router.push(`/entry/${id}`);
@@ -60,10 +63,15 @@ export default function Home({ videos }) {
         <Grid container spacing={2}>
           {videos?.map((video) => (
             <Grid key={video.id} item xs={12} sm={6} md={4} lg={3}>
-              <Entry video={video} openEntry={openEntry} />
+              <Entry
+                video={video}
+                openEntry={openEntry}
+                setMessage={setMessage}
+              />
             </Grid>
           ))}
         </Grid>
+        <FlashMessage message={message} setMessage={setMessage} />
       </main>
     </>
   );
@@ -91,10 +99,13 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-const Entry = ({ video, openEntry }) => {
+const Entry = ({ video, openEntry, setMessage }) => {
   return (
     <Box
-      onClick={() => openEntry(video.id)}
+      onClick={() => {
+        if (video.status === ENTRY_STATUS.READY) openEntry(video.id);
+        else setMessage("Video is still processing...");
+      }}
       sx={{
         cursor: "pointer",
         display: "flex",
@@ -103,13 +114,24 @@ const Entry = ({ video, openEntry }) => {
         width: `${THUMBNAIL_WIDTH}px`,
       }}
     >
-      <Image
-        src={video.thumbnail_url}
-        alt={video.title}
-        width={THUMBNAIL_WIDTH}
-        height={THUMBNAIL_WIDTH / ASPECT_RATIO}
-        style={{ borderRadius: "10px", width: "auto", height: "auto" }}
-      />
+      {video?.thumbnail_url && video?.status === ENTRY_STATUS.READY ? (
+        <Image
+          src={video?.thumbnail_url}
+          alt={video.title}
+          width={THUMBNAIL_WIDTH}
+          height={THUMBNAIL_WIDTH / ASPECT_RATIO}
+          style={{ borderRadius: "10px", width: "auto", height: "auto" }}
+        />
+      ) : (
+        <Box
+          sx={{
+            bgcolor: "grey.300",
+            borderRadius: "10px",
+            width: THUMBNAIL_WIDTH,
+            height: THUMBNAIL_WIDTH / ASPECT_RATIO,
+          }}
+        ></Box>
+      )}
       <Typography
         variant="body1"
         component="p"
