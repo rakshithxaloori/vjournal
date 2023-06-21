@@ -1,4 +1,5 @@
 import os
+import json
 import openai
 
 
@@ -15,7 +16,17 @@ def get_summary(transcription, token_count):
         messages=[
             {
                 "role": "system",
-                "content": "You will be provided with my journal entry (delimited with XML tags) about my day. Summarize my journal entry in not more than 3 sentences. Talk as if you are in the room with me.",
+                "content": """
+                You will be provided with my journal entry (delimited with XML tags) about my day. Summarize my journal entry in not more than 3 sentences. And also generate a title of not more than 100 characters. 
+
+                Produce the output as JSON. The format should be as follows:
+                ```
+                {
+                summary: "The text summary in not more than 3 sentences.",
+                title: "The title of the entry in not more than 100 characters"
+                }
+                ```
+                """,
             },
             {
                 "role": "user",
@@ -23,7 +34,8 @@ def get_summary(transcription, token_count):
             },
         ],
     )
-    return chat_completion["choices"][0]["message"]["content"]
+    json_data = json.loads(chat_completion["choices"][0]["message"]["content"])
+    return json_data["summary"], json_data["title"]
 
 
 # print(chat_completion)

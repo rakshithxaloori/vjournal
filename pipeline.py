@@ -8,6 +8,7 @@ from src.post import post_subtitles
 
 def pipeline():
     audio_urls = get_audio_urls()
+    print(f"Found {len(audio_urls)} audio files")
     for audio in audio_urls:
         id = audio["id"]
         presigned_url = audio["audio_url"]
@@ -28,9 +29,11 @@ def pipeline():
         print(f"Token count for {subtitle_filepath} is {token_count}")
 
         # Summary
-        summary = get_summary(transcription, token_count)
+        summary, title = get_summary(transcription, token_count)
         print(f"Summary for {subtitle_filepath} is '{summary}'")
 
         # Post
-        response = post_subtitles(subtitle_filepath, token_count, language, summary)
+        response = post_subtitles(
+            subtitle_filepath, token_count, language, summary, title
+        )
         print(f"Posted {subtitle_filepath} to {response.url}")

@@ -4,7 +4,7 @@ import requests
 from src.env import SUBTITLES_PRESIGNED_GET_ENDPOINT, BOSS_SECRET_KEY
 
 
-def post_subtitles(file_path, token_count, language, summary):
+def post_subtitles(file_path, token_count, language, summary, title):
     uuid = os.path.basename(file_path).split(".")[0]
 
     headers = {"X-BOSS-SECRET": BOSS_SECRET_KEY}
@@ -14,6 +14,7 @@ def post_subtitles(file_path, token_count, language, summary):
         "language_code": language,
         "file_size": os.path.getsize(file_path),
         "summary": summary,
+        "title": title,
     }
 
     response = requests.post(
