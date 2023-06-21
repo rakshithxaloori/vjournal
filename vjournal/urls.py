@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 
 admin_url = "admin"
+boss_url = os.environ["BOSS_URL"]
 
 if os.environ["CI_CD_STAGE"] == "testing" or os.environ["CI_CD_STAGE"] == "production":
     admin_url = os.environ["ADMIN_URL"]
@@ -32,7 +33,7 @@ urlpatterns = [
     path("authentication/", include("authentication.urls")),
     path("video/", include("video.urls")),
     path("ht/", include("health.urls")),
-    path("boss/", include("boss.urls")),
+    path(f"{boss_url}/", include("boss.urls")),
 ]
 
 
