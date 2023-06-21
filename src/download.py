@@ -1,14 +1,8 @@
 import os
 import requests
 
+from src.env import AUDIO_GET_ENDPOINT, BOSS_SECRET_KEY
 
-from dotenv import load_dotenv
-
-load_dotenv()  # take environment variables from .env.
-
-
-AUDIO_GET_ENDPOINT = os.environ["AUDIO_GET_ENDPOINT"]
-BOSS_SECRET_KEY = os.environ["BOSS_SECRET_KEY"]
 
 # Create directory for mp4s if it doesn't exist
 output_dir = "mp4s"

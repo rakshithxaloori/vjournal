@@ -3,6 +3,7 @@ from src.convert import convert_to_mp3
 from src.transcribe import transcribe_audio
 from src.token_count import get_token_count
 from src.summary import get_summary
+from src.post import post_subtitles
 
 
 def pipeline():
@@ -29,3 +30,7 @@ def pipeline():
         # Summary
         summary = get_summary(transcription, token_count)
         print(f"Summary for {subtitle_filepath} is '{summary}'")
+
+        # Post
+        response = post_subtitles(subtitle_filepath, token_count, language, summary)
+        print(f"Posted {subtitle_filepath} to {response.url}")
