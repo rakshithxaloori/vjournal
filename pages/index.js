@@ -1,17 +1,30 @@
 import Head from "next/head";
-import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { getServerSession } from "next-auth/next";
 
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { createServerAPIKit, networkError } from "@/utils/APIKit";
 
+const THUMBNAIL_WIDTH = 300;
+const ASPECT_RATIO = 16 / 9;
+const VIDEOS_FETCH_COUNT = 10;
+
 export default function Home({ videos }) {
   const router = useRouter();
+
+  const [index, setIndex] = useState(0);
+
+  const openEntry = (id) => {
+    router.push(`/entry/${id}`);
+  };
+
   return (
     <>
       <Head>
@@ -21,17 +34,19 @@ export default function Home({ videos }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Typography variant="h4" component="h4" color="primary">
-          VJournal
-        </Typography>
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
+            mb: 2,
           }}
         >
           <Typography variant="h6" component="h6" color="primary">
-            Videos {videos?.length}
+            Journal Entries: {index * VIDEOS_FETCH_COUNT + 1} -{" "}
+            {Math.min(
+              index * VIDEOS_FETCH_COUNT + VIDEOS_FETCH_COUNT,
+              videos?.length
+            )}
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Button
@@ -42,13 +57,13 @@ export default function Home({ videos }) {
             New Entry
           </Button>
         </Box>
-        {videos?.map((video) => (
-          <Link key={video.id} href={`/entry/${video.id}`}>
-            <Typography variant="body1" component="p" color="primary">
-              {video.title}
-            </Typography>
-          </Link>
-        ))}
+        <Grid container spacing={2}>
+          {videos?.map((video) => (
+            <Grid key={video.id} item xs={12} sm={6} md={4} lg={3}>
+              <Entry video={video} openEntry={openEntry} />
+            </Grid>
+          ))}
+        </Grid>
       </main>
     </>
   );
@@ -74,4 +89,65 @@ export const getServerSideProps = async (context) => {
   return {
     props: {},
   };
+};
+
+const Entry = ({ video, openEntry }) => {
+  return (
+    <Box
+      onClick={() => openEntry(video.id)}
+      sx={{
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        gap: "5px",
+        width: `${THUMBNAIL_WIDTH}px`,
+      }}
+    >
+      <Image
+        src={video.thumbnail_url}
+        alt={video.title}
+        width={THUMBNAIL_WIDTH}
+        height={THUMBNAIL_WIDTH / ASPECT_RATIO}
+        style={{ borderRadius: "10px", width: "auto", height: "auto" }}
+      />
+      <Typography
+        variant="body1"
+        component="p"
+        color="primary"
+        sx={{
+          // Make it two lines and hide the rest
+          display: "-webkit-box",
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {video.title}
+      </Typography>
+      <Typography variant="body2" component="p" color="textSecondary">
+        {getTimeAgo(video.created_at)}
+      </Typography>
+    </Box>
+  );
+};
+
+const getTimeAgo = (date) => {
+  const now = new Date();
+  const then = new Date(date);
+  const diff = now - then;
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  if (hours > 24) {
+    return `${Math.floor(hours / 24)} days ago`;
+  }
+  if (hours > 0) {
+    return `${hours} hours ago`;
+  }
+  if (minutes > 0) {
+    return `${minutes} minutes ago`;
+  }
+  return `${seconds} seconds ago`;
 };

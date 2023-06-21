@@ -10,7 +10,6 @@ import Typography from "@mui/material/Typography";
 import { createServerAPIKit, networkError } from "@/utils/APIKit";
 
 const Entry = ({ video }) => {
-  console.log(video);
   const videoRef = useRef(null);
   const playerRef = useRef(null);
 
@@ -43,13 +42,38 @@ const Entry = ({ video }) => {
         width: "100%",
       }}
     >
-      <Typography variant="h4" component="h4" color="primary">
-        Journal
-      </Typography>
-      <Typography variant="body1" color="primary">
-        {video.title}
-      </Typography>
-      <video ref={videoRef} autoPlay controls style={videoStyle} />
+      <Box
+        sx={{
+          width: "70vw",
+          display: "flex",
+          flexDirection: "column",
+          alignSelf: "center",
+        }}
+      >
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h4" color="primary" sx={{ mb: 1 }}>
+            {getPrettyDate(video.created_at)}
+          </Typography>
+          <Typography variant="h6" color="textSecondary">
+            {video.title}
+          </Typography>
+        </Box>
+        <video ref={videoRef} autoPlay controls style={videoStyle} />
+        {/* Typography with a grey background that shows video.summary */}
+        <Box
+          sx={{
+            width: "100%",
+            mt: 2,
+          }}
+        >
+          <Typography variant="body1" color="primary">
+            Summary
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            {video.summary}
+          </Typography>
+        </Box>
+      </Box>
     </Box>
   );
 };
@@ -93,12 +117,20 @@ export async function getServerSideProps(context) {
 }
 
 const videoStyle = {
-  // height: "70vh",
-  // width: "auto",
   width: "100%",
   height: "auto",
   aspectRatio: "16/9",
   borderRadius: "20px",
+};
+
+const getPrettyDate = (date) => {
+  const d = new Date(date);
+  return d.toLocaleString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 };
 
 const getManifestUrl = async (video) => {

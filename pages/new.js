@@ -26,6 +26,7 @@ const New = () => {
   const [videoHeight, setVideoHeight] = useState(0);
   const [videoWidth, setVideoWidth] = useState(0);
   const [recordedVideoUrl, setRecordedVideoUrl] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -33,7 +34,8 @@ const New = () => {
 
   useEffect(() => {
     if (recordedBlob) {
-      setRecordedVideoUrl(URL.createObjectURL(recordedBlob));
+      const videoUrl = URL.createObjectURL(recordedBlob);
+      setRecordedVideoUrl(videoUrl);
     }
   }, [recordedBlob]);
 
@@ -47,6 +49,7 @@ const New = () => {
   const upload = async () => {
     if (!recordedBlob) return;
     try {
+      setDisabled(true);
       const APIKit = await createClientAPIKit(session?.token_key);
       const response = await APIKit.post("/api/video/upload/", {
         file_size: recordedBlob.size,
@@ -75,8 +78,9 @@ const New = () => {
         }
       );
     } catch (e) {
-      console.log(e);
       setMessage(networkError(e));
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -86,30 +90,27 @@ const New = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
         height: "100%",
         width: "100%",
       }}
     >
       <Box>
-        <Typography variant="h4" color="primary">
-          Progress {uploadProgress}%
+        <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
+          Talk about your day
         </Typography>
         {!recordedVideoUrl ? (
           <video ref={previewRef} autoPlay style={videoStyle}></video>
         ) : null}
         {recordedVideoUrl ? (
-          <>
-            <video
-              src={recordedVideoUrl}
-              autoPlay
-              loop
-              style={videoStyle}
-            ></video>
-          </>
+          <video
+            src={recordedVideoUrl}
+            autoPlay
+            loop
+            style={videoStyle}
+          ></video>
         ) : null}
       </Box>
-      <Box>
+      <Box sx={{ mt: 2 }}>
         {permission ? (
           streamStatus === STREAM_STATUS.IDLE ? (
             <Button
@@ -127,7 +128,7 @@ const New = () => {
             </Button>
           ) : streamStatus === STREAM_STATUS.RECORDED ? (
             <Button onClick={upload} variant="contained">
-              Upload
+              {disabled ? `Uploading ${uploadProgress}...` : "Upload"}
             </Button>
           ) : null
         ) : (
