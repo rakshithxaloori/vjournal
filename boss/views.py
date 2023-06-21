@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 from rest_framework import status
@@ -11,6 +12,7 @@ from boss.utils import create_presigned_s3_post
 from boss.middleware import secret_key_middleware
 
 
+@csrf_exempt
 @secret_key_middleware
 @api_view(["GET"])
 def get_audio_urls_view(request):
@@ -26,6 +28,7 @@ def get_audio_urls_view(request):
     )
 
 
+@csrf_exempt
 @secret_key_middleware
 @api_view(["POST"])
 def get_subtitles_presigned_view(request):
@@ -41,7 +44,8 @@ def get_subtitles_presigned_view(request):
     file_size = request.data.get("file_size", None)
     token_count = request.data.get("token_count", None)
     summary = request.data.get("summary", None)
-    if None in [language_code, file_size, token_count, summary]:
+    title = request.data.get("title", None)
+    if None in [language_code, file_size, token_count, summary, title]:
         return BAD_REQUEST_RESPONSE
 
     subtitles_file_path = f"subtitles/{video.user.username}/{video_id}.srt"
@@ -57,6 +61,8 @@ def get_subtitles_presigned_view(request):
         video=video,
         text=summary,
     )
+    video.title = title
+    video.save(update_fields=["title"])
 
     presigned_post = create_presigned_s3_post(file_size, subtitles_file_path)
 
