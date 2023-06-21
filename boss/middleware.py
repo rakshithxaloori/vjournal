@@ -8,15 +8,11 @@ logger = logging.getLogger(__name__)
 BOSS_SECRET_KEY = settings.BOSS_SECRET_KEY
 
 
-class SecretKeyMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-        self.secret_key = BOSS_SECRET_KEY
-
-    def __call__(self, request):
+def secret_key_middleware(get_response):
+    def middleware(request):
         secret_key_header = request.headers.get("X-BOSS-SECRET")
 
-        if secret_key_header != self.secret_key:
+        if secret_key_header != BOSS_SECRET_KEY:
             # Log the unauthorized access attempt
             logger.warning(
                 "Unauthorized access attempt: %s %s", request.method, request.path
@@ -26,5 +22,7 @@ class SecretKeyMiddleware:
             response = HttpResponse("Unauthorized", status=401)
             return response
 
-        response = self.get_response(request)
+        response = get_response(request)
         return response
+
+    return middleware

@@ -76,6 +76,22 @@ class Subtitles(models.Model):
     file_path = models.URLField()
     # https://en.wikipedia.org/wiki/ISO_639-1
     language_code = models.CharField(max_length=2)
+    token_count = models.PositiveIntegerField()
 
     def __str__(self) -> str:
         return f"{self.video.title} - {self.language_code}"
+
+
+# Summary model
+class Summary(models.Model):
+    user = models.ForeignKey(User, related_name="summaries", on_delete=models.CASCADE)
+    video = models.OneToOneField(
+        Video, related_name="summary", on_delete=models.CASCADE
+    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    text = models.TextField()
+
+    def __str__(self) -> str:
+        return f"{self.video.title} {self.created_at}"

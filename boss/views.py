@@ -5,11 +5,13 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from vjournal.utils import BAD_REQUEST_RESPONSE
-from video.models import Video, Subtitles
+from video.models import Video, Subtitles, Summary
 from boss.serializers import AudioURLsSerializer
 from boss.utils import create_presigned_s3_post
+from boss.middleware import secret_key_middleware
 
 
+@secret_key_middleware
 @api_view(["GET"])
 def get_audio_urls_view(request):
     # Get all videos that don't have subtitles
@@ -24,6 +26,7 @@ def get_audio_urls_view(request):
     )
 
 
+@secret_key_middleware
 @api_view(["POST"])
 def get_subtitles_presigned_view(request):
     video_id = request.data.get("video_id", None)
@@ -36,17 +39,23 @@ def get_subtitles_presigned_view(request):
 
     language_code = request.data.get("language_code", None)
     file_size = request.data.get("file_size", None)
-    if language_code is None:
+    token_count = request.data.get("token_count", None)
+    summary = request.data.get("summary", None)
+    if None in [language_code, file_size, token_count, summary]:
         return BAD_REQUEST_RESPONSE
 
-    subtitles_file_path = (
-        f"subtitles/{video.user.username}/{video_id}.vtt"  # TODO check file extension
-    )
+    subtitles_file_path = f"subtitles/{video.user.username}/{video_id}.srt"
     Subtitles.objects.create(
         user=video.user,
         video=video,
         file_path=subtitles_file_path,
         language_code=language_code,
+        token_count=token_count,
+    )
+    Summary.objects.create(
+        user=video.user,
+        video=video,
+        text=summary,
     )
 
     presigned_post = create_presigned_s3_post(file_size, subtitles_file_path)
