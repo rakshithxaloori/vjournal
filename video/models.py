@@ -47,6 +47,7 @@ class Video(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name_plural = "Videos"
 
 
 # Thumbnail model
@@ -62,6 +63,10 @@ class Thumbnail(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user.username} - {self.video.title}"
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name_plural = "Thumbnails"
 
 
 # Subtitles model
@@ -81,6 +86,10 @@ class Subtitles(models.Model):
     def __str__(self) -> str:
         return f"{self.video.title} - {self.language_code}"
 
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name_plural = "Subtitles"
+
 
 # Summary model
 class Summary(models.Model):
@@ -95,3 +104,7 @@ class Summary(models.Model):
 
     def __str__(self) -> str:
         return f"{self.video.title} {self.created_at}"
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name_plural = "Summaries"
