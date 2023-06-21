@@ -11,13 +11,14 @@ AUDIO_GET_ENDPOINT = os.environ["AUDIO_GET_ENDPOINT"]
 BOSS_SECRET_KEY = os.environ["BOSS_SECRET_KEY"]
 
 # Create directory for mp4s if it doesn't exist
-if not os.path.exists("mp4s"):
-    os.makedirs("mp4s")
+output_dir = "mp4s"
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
 
 def download_video(uuid, presigned_url):
     file_name = f"{uuid}.mp4"
-    file_path = os.path.join("mp4s", file_name)
+    file_path = os.path.join(output_dir, file_name)
 
     response = requests.get(presigned_url)
     with open(file_path, "wb") as file:

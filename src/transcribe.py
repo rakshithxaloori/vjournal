@@ -1,5 +1,6 @@
 import os
 import whisper
+from whisper.utils import get_writer
 
 
 # What if the audio is in a different language?
@@ -8,22 +9,21 @@ model = whisper.load_model("small")
 
 
 # Create directory for subtitles if it doesn't exist
-if not os.path.exists("subtitles"):
-    os.makedirs("subtitles")
+output_dir = "subtitles"
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
 
 def transcribe_audio(audio_file_path):
     result = model.transcribe(audio_file_path)
     # Save segments to file
+    audio_filename = os.path.basename(audio_file_path)
     id = os.path.basename(audio_file_path).split(".")[0]
-    subtitle_file_path = os.path.join("subtitles", f"{id}.srt")
-    with open(subtitle_file_path, "w") as file:
-        for segment in result["segments"]:
-            file.write(
-                f"{segment['id']}\n"
-                f"{segment['start']} --> {segment['end']}\n"
-                f"{segment['text'].strip()}\n\n"
-            )
+    subtitle_filename = f"{id}.srt"
+    subtitle_file_path = os.path.join(output_dir, subtitle_filename)
+
+    writer = get_writer("srt", output_dir)  # get srt writer for the current directory
+    writer(result, audio_filename)  # add empty dictionary for 'options'
 
     return subtitle_file_path, result["text"], result["language"]
 
