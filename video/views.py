@@ -40,9 +40,9 @@ def upload_video_view(request):
     the file directly to the S3 bucket.
     """
     # Limit to only one upload per day
-    if request.user.videos.filter(created_at__gte=datetime.now().date()).count() >= 1:
+    if request.user.videos.filter(created_at__gte=datetime.now().date()).count() >= 3:
         return JsonResponse(
-            {"message": "You have already uploaded a video today."},
+            {"message": "You have reached upload limit."},
             status=status.HTTP_400_BAD_REQUEST,
         )
     file_size = request.data.get("file_size", None)
