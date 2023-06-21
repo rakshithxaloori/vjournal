@@ -20,11 +20,14 @@ class VideoShortSerializer(ModelSerializer):
         ]
 
     def get_thumbnail_url(self, obj):
+        if obj.thumbnail is None:
+            return None
         return create_presigned_url(obj.thumbnail.file_path)
 
 
 class VideoLongSerializer(ModelSerializer):
     urls = SerializerMethodField()
+    summary = SerializerMethodField()
 
     class Meta:
         model = Video
@@ -35,11 +38,19 @@ class VideoLongSerializer(ModelSerializer):
             "duration_in_ms",
             "status",
             "urls",
+            "summary",
         ]
 
     def get_urls(self, obj):
+        if obj.file_path is None:
+            return None
         return {
             "mpd": create_presigned_url(obj.file_path),
             "video": create_presigned_url(obj.file_path.replace(".mpd", "_video.mp4")),
             "audio": create_presigned_url(obj.file_path.replace(".mpd", "_audio.mp4")),
         }
+
+    def get_summary(self, obj):
+        if obj.summary is None:
+            return None
+        return obj.summary.text
