@@ -25,6 +25,7 @@ const New = () => {
     startRecording,
     stopRecording,
     recordedBlob,
+    cancelVideo,
   } = useRecorder();
 
   const [videoHeight, setVideoHeight] = useState(0);
@@ -108,7 +109,7 @@ const New = () => {
           ></video>
         ) : null}
       </Box>
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ display: "flex", flexDirection: "row", mt: 2, gap: 2 }}>
         {permission ? (
           streamStatus === STREAM_STATUS.IDLE ? (
             <Button
@@ -125,11 +126,23 @@ const New = () => {
               Stop Recording
             </Button>
           ) : streamStatus === STREAM_STATUS.RECORDED ? (
-            <Button onClick={upload} variant="contained">
-              {disabled
-                ? `Uploading ${uploadProgress.toFixed(0)}%...`
-                : "Upload"}
-            </Button>
+            <>
+              <Button onClick={upload} variant="contained">
+                {disabled
+                  ? `Uploading ${uploadProgress.toFixed(0)}%...`
+                  : "Upload"}
+              </Button>
+              <Button
+                onClick={() => {
+                  cancelVideo();
+                  URL.revokeObjectURL(recordedVideoUrl);
+                  setRecordedVideoUrl(null);
+                }}
+                variant="contained"
+              >
+                Cancel
+              </Button>
+            </>
           ) : null
         ) : (
           <Button

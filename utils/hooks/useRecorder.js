@@ -144,6 +144,14 @@ const useRecorder = () => {
     localVideoChunks.current.push(event.data);
   };
 
+  const cancelVideo = () => {
+    setRecordedBlob(null);
+    localVideoChunks.current = [];
+    setStreamStatus(STREAM_STATUS.IDLE);
+    stopStream();
+    startStream();
+  };
+
   return {
     permission,
     stream,
@@ -152,6 +160,7 @@ const useRecorder = () => {
     startRecording,
     stopRecording,
     recordedBlob,
+    cancelVideo,
   };
 };
 
