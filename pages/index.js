@@ -37,40 +37,82 @@ export default function Home({ videos }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            mb: 2,
-          }}
-        >
-          <Typography variant="h6" component="h6" color="primary">
-            Journal Entries: {index * VIDEOS_FETCH_COUNT + 1} -{" "}
-            {Math.min(
-              index * VIDEOS_FETCH_COUNT + VIDEOS_FETCH_COUNT,
-              videos?.length
-            )}
-          </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => router.push("/new")}
-          >
-            New Entry
-          </Button>
-        </Box>
-        <Grid container spacing={2}>
-          {videos?.map((video) => (
-            <Grid key={video.id} item xs={12} sm={6} md={4} lg={3}>
-              <Entry
-                video={video}
-                openEntry={openEntry}
-                setMessage={setMessage}
-              />
+        {videos.length > 0 ? (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                mb: 2,
+              }}
+            >
+              <Typography variant="h6" component="h6" color="primary">
+                Journal Entries: {index * VIDEOS_FETCH_COUNT + 1} -{" "}
+                {Math.min(
+                  index * VIDEOS_FETCH_COUNT + VIDEOS_FETCH_COUNT,
+                  videos?.length
+                )}
+              </Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => router.push("/new")}
+              >
+                New Entry
+              </Button>
+            </Box>
+            <Grid container spacing={2}>
+              {videos?.map((video) => (
+                <Grid key={video.id} item xs={12} sm={6} md={4} lg={3}>
+                  <Entry
+                    video={video}
+                    openEntry={openEntry}
+                    setMessage={setMessage}
+                  />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          </>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: "10px",
+              mt: 10,
+            }}
+          >
+            <Box
+              sx={{
+                bgcolor: "grey.400",
+                borderRadius: "10px",
+                width: THUMBNAIL_WIDTH,
+                height: THUMBNAIL_WIDTH / ASPECT_RATIO,
+              }}
+            ></Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <Typography variant="h6" component="h6" color="primary">
+                Create your first journal entry!
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => router.push("/new")}
+              >
+                New Entry
+              </Button>
+            </Box>
+          </Box>
+        )}
         <FlashMessage message={message} setMessage={setMessage} />
       </main>
     </>
@@ -118,6 +160,7 @@ const Entry = ({ video, openEntry, setMessage }) => {
         <Image
           src={video?.thumbnail_url}
           alt={video.title}
+          priority={true}
           width={THUMBNAIL_WIDTH}
           height={THUMBNAIL_WIDTH / ASPECT_RATIO}
           style={{ borderRadius: "10px", width: "auto", height: "auto" }}
