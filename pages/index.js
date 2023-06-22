@@ -18,7 +18,7 @@ const THUMBNAIL_WIDTH = 300;
 const ASPECT_RATIO = 16 / 9;
 const VIDEOS_FETCH_COUNT = 10;
 
-export default function Home({ videos }) {
+export default function Home({ session, videos }) {
   const router = useRouter();
 
   const [index, setIndex] = useState(0);
@@ -37,7 +37,7 @@ export default function Home({ videos }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {videos.length > 0 ? (
+        {videos && videos?.length > 0 ? (
           <>
             <Box
               sx={{
@@ -80,7 +80,7 @@ export default function Home({ videos }) {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
-              gap: "10px",
+              gap: 1.5,
               mt: 10,
             }}
           >
@@ -129,6 +129,7 @@ export const getServerSideProps = async (context) => {
       const { videos } = response.data.payload;
       return {
         props: {
+          session,
           videos,
         },
       };
@@ -137,7 +138,9 @@ export const getServerSideProps = async (context) => {
     }
   }
   return {
-    props: {},
+    props: {
+      session,
+    },
   };
 };
 

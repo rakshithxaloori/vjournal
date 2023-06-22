@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth/next";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import useRecorder from "@/utils/hooks/useRecorder";
 import { createClientAPIKit, networkError, uploadToS3 } from "@/utils/APIKit";
 import { STREAM_STATUS } from "@/utils/stream";
@@ -148,6 +150,23 @@ const New = () => {
 export default dynamic(() => Promise.resolve(New), {
   ssr: false,
 });
+
+export const getServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+  if (session?.token_key) {
+    return {
+      props: {},
+    };
+  }
+};
 
 const videoStyle = {
   transform: "scaleX(-1)",

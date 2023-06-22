@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -40,13 +39,6 @@ const Header = () => {
         </Link>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          {status === "unauthenticated" && !session && (
-            <Link href="/auth/signin" style={linkStyle} onClick={onSignin}>
-              <Typography variant="body2" color="primary">
-                Sign In / Sign Up
-              </Typography>
-            </Link>
-          )}
           {status === "authenticated" && session && (
             <>
               <Link
