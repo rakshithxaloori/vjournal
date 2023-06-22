@@ -20,13 +20,14 @@ const useRecorder = () => {
 
   useEffect(() => {
     startStream();
+  }, []);
+
+  useEffect(() => {
+    startStream();
     return () => {
-      // TODO
-      // stream is null when we click on home
-      console.log("unmounting");
       stopStream();
     };
-  }, []);
+  }, [stream]);
 
   useEffect(() => {
     // Stop the recording if max recording time is reached
@@ -36,7 +37,6 @@ const useRecorder = () => {
   }, [localVideoChunks.current.length]);
 
   useEffect(() => {
-    console.log("stream changed");
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -44,14 +44,13 @@ const useRecorder = () => {
   }, [stream, streamStatus]);
 
   const handleVisibilityChange = () => {
-    console.log("visibility changed");
     if (streamStatus === STREAM_STATUS.RECORDING) return;
-
     if (document.visibilityState === "hidden") stopStream();
     else if (document.visibilityState === "visible") startStream();
   };
 
   const startStream = async () => {
+    if (stream !== null) return;
     // get video and audio permissions and then stream the result media stream to the videoSrc variable
     if ("MediaRecorder" in window) {
       try {
@@ -91,7 +90,6 @@ const useRecorder = () => {
   };
 
   const stopStream = () => {
-    console.log("stopping stream", stream);
     if (stream === null) return;
     stream.getTracks().forEach((track) => track.stop());
     setStream(null);
