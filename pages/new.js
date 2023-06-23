@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
@@ -84,79 +85,87 @@ const New = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100%",
-        width: "100%",
-      }}
-    >
-      <Box>
-        <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
-          Talk about your day
-        </Typography>
-        {!recordedVideoUrl ? (
-          <video ref={previewRef} autoPlay style={videoStyle}></video>
-        ) : null}
-        {recordedVideoUrl ? (
-          <video
-            src={recordedVideoUrl}
-            autoPlay
-            loop
-            style={videoStyle}
-          ></video>
-        ) : null}
-      </Box>
-      <Box sx={{ display: "flex", flexDirection: "row", mt: 2, gap: 2 }}>
-        {permission ? (
-          streamStatus === STREAM_STATUS.IDLE ? (
-            <Button
-              onClick={() => {
-                startRecording();
-                afterStartRecording();
-              }}
-              variant="contained"
-            >
-              Start Recording
-            </Button>
-          ) : streamStatus === STREAM_STATUS.RECORDING ? (
-            <Button onClick={stopRecording} variant="contained">
-              Stop Recording
-            </Button>
-          ) : streamStatus === STREAM_STATUS.RECORDED ? (
-            <>
-              <Button onClick={upload} variant="contained">
-                {disabled
-                  ? `Uploading ${uploadProgress.toFixed(0)}%...`
-                  : "Upload"}
-              </Button>
+    <>
+      <Head>
+        <title>New Entry | VJournal</title>
+        <meta name="description" content="Personal video journaling app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        <Box>
+          <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
+            Talk about your day
+          </Typography>
+          {!recordedVideoUrl ? (
+            <video ref={previewRef} autoPlay style={videoStyle}></video>
+          ) : null}
+          {recordedVideoUrl ? (
+            <video
+              src={recordedVideoUrl}
+              autoPlay
+              loop
+              style={videoStyle}
+            ></video>
+          ) : null}
+        </Box>
+        <Box sx={{ display: "flex", flexDirection: "row", mt: 2, gap: 2 }}>
+          {permission ? (
+            streamStatus === STREAM_STATUS.IDLE ? (
               <Button
                 onClick={() => {
-                  cancelVideo();
-                  URL.revokeObjectURL(recordedVideoUrl);
-                  setRecordedVideoUrl(null);
+                  startRecording();
+                  afterStartRecording();
                 }}
                 variant="contained"
               >
-                Cancel
+                Start Recording
               </Button>
-            </>
-          ) : null
-        ) : (
-          <Button
-            onClick={() => {
-              // TODO: get camera permission
-            }}
-            variant="contained"
-          >
-            Get Camera
-          </Button>
-        )}
+            ) : streamStatus === STREAM_STATUS.RECORDING ? (
+              <Button onClick={stopRecording} variant="contained">
+                Stop Recording
+              </Button>
+            ) : streamStatus === STREAM_STATUS.RECORDED ? (
+              <>
+                <Button onClick={upload} variant="contained">
+                  {disabled
+                    ? `Uploading ${uploadProgress.toFixed(0)}%...`
+                    : "Upload"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    cancelVideo();
+                    URL.revokeObjectURL(recordedVideoUrl);
+                    setRecordedVideoUrl(null);
+                  }}
+                  variant="contained"
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : null
+          ) : (
+            <Button
+              onClick={() => {
+                // TODO: get camera permission
+              }}
+              variant="contained"
+            >
+              Get Camera
+            </Button>
+          )}
+        </Box>
+        <FlashMessage message={message} setMessage={setMessage} />
       </Box>
-      <FlashMessage message={message} setMessage={setMessage} />
-    </Box>
+    </>
   );
 };
 
