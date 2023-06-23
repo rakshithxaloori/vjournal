@@ -40,7 +40,8 @@ def upload_video_view(request):
     the file directly to the S3 bucket.
     """
     # Limit to only one upload per day
-    if request.user.videos.filter(created_at__gte=datetime.now().date()).count() >= 3:
+    user = request.user
+    if user.videos.filter(created_at__gte=datetime.now().date()).count() >= 3:
         return JsonResponse(
             {"message": "You have reached upload limit."},
             status=status.HTTP_400_BAD_REQUEST,
@@ -54,13 +55,21 @@ def upload_video_view(request):
 
     # Create a uuid for the video
     video_id = uuid.uuid4()
-    file_path = f"videos/{request.user.username}/{video_id}"
+    file_path = f"videos/{user.username}/{video_id}"
 
     # Create a new video
+    date_now = datetime.now()
+    day_suffix = (
+        "th"
+        if 11 <= date_now.day <= 13
+        else {1: "st", 2: "nd", 3: "rd"}.get(date_now.day % 10, "th")
+    )
+    formatted_date = date_now.strftime(f"%d{day_suffix} %B, %Y")
+
     Video.objects.create(
         id=video_id,
-        user=request.user,
-        title=f"{request.user.username} on {datetime.now().strftime('%Y-%m-%d')}",
+        user=user,
+        title=f"{user.first_name} {user.last_name} on {formatted_date}",
         file_path=file_path,
         input_width_in_px=input_width_in_px,
         input_height_in_px=input_height_in_px,
