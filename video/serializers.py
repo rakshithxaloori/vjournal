@@ -20,9 +20,11 @@ class VideoShortSerializer(ModelSerializer):
         ]
 
     def get_thumbnail_url(self, obj):
-        if obj.thumbnail is None:
+        # Check if thumbnail exists
+        try:
+            return create_presigned_url(obj.thumbnail.file_path)
+        except:
             return None
-        return create_presigned_url(obj.thumbnail.file_path)
 
 
 class VideoLongSerializer(ModelSerializer):

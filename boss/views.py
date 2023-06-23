@@ -17,7 +17,7 @@ from boss.middleware import secret_key_middleware
 @api_view(["GET"])
 def get_audio_urls_view(request):
     # Get all videos that don't have subtitles
-    videos = Video.objects.filter(subtitles__isnull=True)
+    videos = Video.objects.filter(subtitles__isnull=True, status=Video.READY)
     serializer = AudioURLsSerializer(videos, many=True)
     return JsonResponse(
         {
