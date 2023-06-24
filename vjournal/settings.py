@@ -248,3 +248,10 @@ AWS_SNS_REGION_NAME = os.environ["AWS_SNS_REGION_NAME"]
 ################################################################################
 # Boss
 BOSS_SECRET_KEY = os.environ["BOSS_SECRET_KEY"]
+
+################################################################################
+# Stripe
+STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
+STRIPE_WEBHOOK_SECRET = os.environ["STRIPE_WEBHOOK_SECRET"]
+STRIPE_PRICE_ID_USD = os.environ["STRIPE_PRICE_ID_USD"]
+STRIPE_PRICE_ID_INR = os.environ["STRIPE_PRICE_ID_INR"]
