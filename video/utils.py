@@ -77,15 +77,16 @@ def create_mediaconvert_job(video_id):
     iw = video.input_width_in_px
     ih = video.input_height_in_px
 
-    if iw / ih < 16 / 9:
+    if iw / ih <= 16 / 9:
         ow = iw
         oh = iw * 9 / 16
         x_offset = 0
-        y_offset = (ih - oh) / 2
+        y_offset = int((ih - oh) / 2 // 2 * 2)  # Ensure y_offset is a multiple of 2
+
     elif iw / ih > 16 / 9:
         ow = ih * 16 / 9
         oh = ih
-        x_offset = (iw - ow) / 2
+        x_offset = int((iw - ow) / 2 // 2 * 2)
         y_offset = 0
 
     ow = int(ow)
