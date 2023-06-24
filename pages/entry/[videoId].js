@@ -39,7 +39,10 @@ const Entry = ({ video }) => {
         <title>
           {video?.title} | {getPrettyDate(video.created_at)}
         </title>
-        <meta name="description" content="Personal video journaling app" />
+        <meta
+          name="description"
+          content="Your personal video diary & journal"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
