@@ -43,7 +43,7 @@ class Video(models.Model):
     output_height_in_px = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.user.username} | {self.title} | {self.status}"
+        return f"{self.user.first_name} {self.user.last_name} | {self.title} | {self.status}"
 
     class Meta:
         ordering = ["-created_at"]
@@ -62,7 +62,7 @@ class Thumbnail(models.Model):
     file_path = models.URLField()
 
     def __str__(self) -> str:
-        return f"{self.user.username} - {self.video.title}"
+        return self.video
 
     class Meta:
         ordering = ["-created_at"]
@@ -84,7 +84,7 @@ class Subtitles(models.Model):
     token_count = models.PositiveIntegerField()
 
     def __str__(self) -> str:
-        return f"{self.video.title} - {self.language_code}"
+        return f"{self.video} - {self.language_code}"
 
     class Meta:
         ordering = ["-created_at"]
@@ -103,7 +103,7 @@ class Summary(models.Model):
     text = models.TextField()
 
     def __str__(self) -> str:
-        return f"{self.video.title} {self.created_at}"
+        return f"{self.video} {self.created_at}"
 
     class Meta:
         ordering = ["-created_at"]
