@@ -49,13 +49,21 @@ export default function Home({ session, videos }) {
                 mb: 2,
               }}
             >
-              <Typography variant="h6" component="h6" color="primary">
+              <Typography
+                variant="h5"
+                component="h5"
+                color="textSecondary"
+                sx={{ mb: 1 }}
+              >
+                Your perosonal video diary & journal
+              </Typography>
+              {/* <Typography variant="h6" component="h6" color="textSecondary">
                 Journal Entries: {index * VIDEOS_FETCH_COUNT + 1} -{" "}
                 {Math.min(
                   index * VIDEOS_FETCH_COUNT + VIDEOS_FETCH_COUNT,
                   videos?.length
                 )}
-              </Typography>
+              </Typography> */}
               <Box sx={{ flexGrow: 1 }} />
               <Button
                 variant="contained"
