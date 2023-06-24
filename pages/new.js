@@ -106,7 +106,7 @@ const New = () => {
       >
         <Box>
           <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
-            Talk about your day
+            Talk about your day (in English, please 🥺)
           </Typography>
           {!recordedVideoUrl ? (
             <video ref={previewRef} autoPlay style={videoStyle}></video>
