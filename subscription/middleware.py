@@ -13,19 +13,18 @@ def subscription_middleware(get_response):
         user = request.user
         if user.is_authenticated:
             payload = get_subscription_info(user)
-            if (
-                not payload["is_beta"]
-                or not payload["is_active"]
-                or payload["current_period_end"] < timezone.now()
+            if payload["is_beta"] or (
+                payload["current_period_end"] != 0
+                and payload["current_period_end"] > timezone.now()
             ):
+                response = get_response(request)
+                return response
+            else:
                 # You can't create new entries
                 return JsonResponse(
                     {"detail": "Subscription required"},
                     status=status.HTTP_402_PAYMENT_REQUIRED,
                 )
-            else:
-                response = get_response(request)
-                return response
 
         else:
             return JsonResponse(

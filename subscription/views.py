@@ -68,7 +68,7 @@ def webhook(request):
 
             if price_id not in [STRIPE_PRICE_ID_INR, STRIPE_PRICE_ID_USD]:
                 # Delete customer
-                del_customer_task.delay(user.id)
+                del_customer_task.delay(subscription.customer)
             else:
                 Customer.objects.update_or_create(
                     user=user,
@@ -80,19 +80,19 @@ def webhook(request):
                                 subscription.current_period_end
                             )
                         ),
-                        "is_active": True,
+                        "cancel_at_period_end": subscription.cancel_at_period_end,
                     },
                 )
         except (Customer.DoesNotExist, User.DoesNotExist):
-            del_customer_task.delay(subscription.customer, subscription.id)
+            del_customer_task.delay(subscription.customer)
 
     elif poll_type == "customer.subscription.deleted":
         try:
             tot_customer = Customer.objects.get(stripe_subscription_id=subscription.id)
-            tot_customer.is_active = False
-            tot_customer.save(update_fields=["is_active"])
+            tot_customer.cancel_at_period_end = True
+            tot_customer.save(update_fields=["cancel_at_period_end"])
         except Customer.DoesNotExist:
-            del_customer_task.delay(subscription.customer, subscription.id)
+            del_customer_task.delay(subscription.customer)
     else:
         print("Unhandled poll type {}".format(poll_type))
 
