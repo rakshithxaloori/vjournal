@@ -18,11 +18,11 @@ const THUMBNAIL_WIDTH = 300;
 const ASPECT_RATIO = 16 / 9;
 const VIDEOS_FETCH_COUNT = 10;
 
-export default function Home({ session, videos }) {
+export default function Home({ session, videos, error }) {
   const router = useRouter();
 
   const [index, setIndex] = useState(0);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(error || "");
 
   const openEntry = (id) => {
     router.push(`/entry/${id}`);
@@ -57,13 +57,6 @@ export default function Home({ session, videos }) {
               >
                 Your perosonal video diary & journal
               </Typography>
-              {/* <Typography variant="h6" component="h6" color="textSecondary">
-                Journal Entries: {index * VIDEOS_FETCH_COUNT + 1} -{" "}
-                {Math.min(
-                  index * VIDEOS_FETCH_COUNT + VIDEOS_FETCH_COUNT,
-                  videos?.length
-                )}
-              </Typography> */}
               <Box sx={{ flexGrow: 1 }} />
               <Button
                 variant="contained"
@@ -177,7 +170,7 @@ const Entry = ({ video, openEntry, setMessage }) => {
           priority={true}
           width={THUMBNAIL_WIDTH}
           height={THUMBNAIL_WIDTH / ASPECT_RATIO}
-          style={{ borderRadius: "10px", width: "auto", height: "auto" }}
+          style={{ borderRadius: "10px" }}
         />
       ) : (
         <Box
