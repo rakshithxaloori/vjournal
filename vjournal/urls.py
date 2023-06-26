@@ -32,6 +32,7 @@ urlpatterns = [
     path("{}/".format(admin_url), admin.site.urls),
     path("authentication/", include("authentication.urls")),
     path("video/", include("video.urls")),
+    path("subscription/", include("subscription.urls")),
     path("ht/", include("health.urls")),
     path(f"{boss_url}/", include("boss.urls")),
 ]

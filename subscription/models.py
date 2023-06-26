@@ -16,8 +16,8 @@ class Customer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     stripe_customer_id = models.CharField(max_length=255)
     stripe_subscription_id = models.CharField(max_length=255)
-    current_period_end = models.DateTimeField()
-    is_active = models.BooleanField(default=True)
+    current_period_end = models.DateTimeField()  # End of current billing period
+    is_active = models.BooleanField(default=True)  # Hasn't cancelled subscription
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} | {self.is_active}"

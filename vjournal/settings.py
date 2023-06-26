@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     ### VJournal Apps ###
     "authentication",
     "video",
+    "subscription",
     "health",
     "boss",
 ]

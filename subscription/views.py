@@ -21,43 +21,24 @@ from knox.auth import TokenAuthentication
 from subscription.models import Customer
 from subscription.tasks import del_customer_task
 from authentication.models import User
+from subscription.utils import get_subscription_info
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET = settings.STRIPE_WEBHOOK_SECRET
-STRIPE_PRICE_ID_USD = settings.STRIPE_SMALL_PRICE_ID_USD
-STRIPE_PRICE_ID_INR = settings.STRIPE_SMALL_PRICE_ID_INR
+STRIPE_PRICE_ID_USD = settings.STRIPE_PRICE_ID_USD
+STRIPE_PRICE_ID_INR = settings.STRIPE_PRICE_ID_INR
 
 
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def check_subscription_view(request):
-    try:
-        customer = Customer.objects.get(user=request.user)
-        return JsonResponse(
-            {
-                "detail": "Subscription details",
-                "payload": {
-                    "is_active": customer.is_active,
-                    "current_period_end": customer.current_period_end,
-                    "type": customer.type,
-                },
-            },
-            status=status.HTTP_200_OK,
-        )
-    except Customer.DoesNotExist:
-        return JsonResponse(
-            {
-                "detail": "No subscription",
-                "payload": {
-                    "is_active": False,
-                    "current_period_end": 0,
-                    "type": None,
-                },
-            },
-            status=status.HTTP_200_OK,
-        )
+    payload = get_subscription_info(request.user)
+    return JsonResponse(
+        {"detail": "Subscription details", "payload": payload},
+        status=status.HTTP_200_OK,
+    )
 
 
 @csrf_exempt

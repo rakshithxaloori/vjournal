@@ -25,6 +25,7 @@ from video.models import Video
 from video.utils import create_presigned_s3_post, create_mediaconvert_job, sns_client
 from video.serializers import VideoShortSerializer, VideoLongSerializer
 from video.tasks import del_objects_from_s3_task, create_thumbnail_instance_task
+from subscription.middleware import subscription_middleware
 
 
 VIDEOS_FETCH_COUNT = 10
@@ -33,6 +34,7 @@ VIDEOS_FETCH_COUNT = 10
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
+@subscription_middleware
 def upload_video_view(request):
     """
     This view is responsible for returning a presigned post url
@@ -97,6 +99,7 @@ def upload_video_view(request):
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
+@subscription_middleware
 def process_video_view(request):
     video_id = request.data.get("video_id")
     if (
