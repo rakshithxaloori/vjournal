@@ -19,7 +19,11 @@ def is_object_exists(bucket, path):
 
 @celery_app.task
 def del_objects_from_s3_task(file_path):
-    for bucket in [settings.AWS_INPUT_BUCKET_NAME, settings.AWS_OUTPUT_BUCKET_NAME]:
+    for bucket in [
+        settings.AWS_INPUT_BUCKET_NAME,
+        settings.AWS_OUTPUT_BUCKET_NAME,
+        settings.AWS_CDN_BUCKET_NAME,
+    ]:
         if is_object_exists(bucket, file_path):
             s3_client.delete_object(
                 Bucket=bucket,
@@ -32,7 +36,7 @@ def create_thumbnail_instance_task(video_id, file_path):
     try:
         video = Video.objects.get(id=video_id)
         user = video.user
-        if is_object_exists(settings.AWS_OUTPUT_BUCKET_NAME, file_path):
+        if is_object_exists(settings.AWS_CDN_BUCKET_NAME, file_path):
             Thumbnail.objects.create(user=user, video=video, file_path=file_path)
     except Video.DoesNotExist:
         pass

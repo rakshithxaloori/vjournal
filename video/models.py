@@ -62,7 +62,7 @@ class Thumbnail(models.Model):
     file_path = models.URLField()
 
     def __str__(self) -> str:
-        return self.video
+        return f"{self.video}"
 
     class Meta:
         ordering = ["-created_at"]

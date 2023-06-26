@@ -64,7 +64,7 @@ def create_mediaconvert_job(video_id):
     video_destination = f"s3://{settings.AWS_OUTPUT_BUCKET_NAME}/{video.file_path}/"
 
     thumbnail_path = video.file_path.replace("videos", "thumbnails")
-    thumbnail_destination = f"s3://{settings.AWS_OUTPUT_BUCKET_NAME}/{thumbnail_path}/"
+    thumbnail_destination = f"s3://{settings.AWS_CDN_BUCKET_NAME}/{thumbnail_path}/"
 
     job_settings["Inputs"][0]["FileInput"] = source
     job_settings["OutputGroups"][0]["OutputGroupSettings"]["DashIsoGroupSettings"][

@@ -10,6 +10,7 @@ from video.models import Video, Subtitles, Summary
 from boss.serializers import AudioURLsSerializer
 from boss.utils import create_presigned_s3_post
 from boss.middleware import secret_key_middleware
+from boss.utils import send_entry_email
 
 
 @csrf_exempt
@@ -48,21 +49,25 @@ def get_subtitles_presigned_view(request):
     if None in [language_code, file_size, token_count, summary, title]:
         return BAD_REQUEST_RESPONSE
 
-    subtitles_file_path = f"subtitles/{video.user.username}/{video_id}.srt"
+    user = video.user
+
+    subtitles_file_path = f"subtitles/{user.username}/{video_id}.srt"
     Subtitles.objects.create(
-        user=video.user,
+        user=user,
         video=video,
         file_path=subtitles_file_path,
         language_code=language_code,
         token_count=token_count,
     )
     Summary.objects.create(
-        user=video.user,
+        user=user,
         video=video,
         text=summary,
     )
     video.title = title
     video.save(update_fields=["title"])
+
+    send_entry_email(video, summary)
 
     presigned_post = create_presigned_s3_post(file_size, subtitles_file_path)
 

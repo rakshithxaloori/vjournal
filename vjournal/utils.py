@@ -17,9 +17,6 @@ BAD_REQUEST_RESPONSE = JsonResponse(
 )
 
 
-TESTING_ACCOUNTS = []
-
-
 def get_cdn_url(file_key):
     return default_storage.url(file_key)
 

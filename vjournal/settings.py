@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "authentication",
     "video",
     "subscription",
+    "emails",
     "health",
     "boss",
 ]
@@ -256,3 +257,8 @@ STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
 STRIPE_WEBHOOK_SECRET = os.environ["STRIPE_WEBHOOK_SECRET"]
 STRIPE_PRICE_ID_USD = os.environ["STRIPE_PRICE_ID_USD"]
 STRIPE_PRICE_ID_INR = os.environ["STRIPE_PRICE_ID_INR"]
+
+################################################################################
+# Resend
+RESEND_API_KEY = os.environ["RESEND_API_KEY"]
+RESEND_WEBHOOK_SIGNING_KEY = os.environ["RESEND_WEBHOOK_SIGNING_KEY"]

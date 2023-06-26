@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from video.models import Video
 from video.utils import create_presigned_url
+from vjournal.utils import get_cdn_url
 
 
 class VideoShortSerializer(ModelSerializer):
@@ -22,7 +23,7 @@ class VideoShortSerializer(ModelSerializer):
     def get_thumbnail_url(self, obj):
         # Check if thumbnail exists
         try:
-            return create_presigned_url(obj.thumbnail.file_path)
+            return get_cdn_url(obj.thumbnail.file_path)
         except:
             return None
 
