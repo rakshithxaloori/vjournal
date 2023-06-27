@@ -49,18 +49,29 @@ const Onboarding = ({
           {is_beta && (
             <Box
               sx={{
-                p: 2,
-                mb: 2,
                 display: "flex",
                 flexDirection: "row",
                 gap: 1,
+                mb: 2,
               }}
             >
-              <CheckCircleIcon sx={{ color: "green" }} />
-              <Typography variant="body1" color="green">
-                You have premium access and can use all the features for free.
-                You can also choose to pay the subscription.
-              </Typography>
+              <Box
+                sx={{
+                  p: 1,
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 1,
+                }}
+              >
+                <CheckCircleIcon sx={{ color: "green" }} />
+                <Typography variant="body1" color="green">
+                  You have premium access and can use all the features for free.
+                  You can also choose to pay the subscription.
+                </Typography>
+              </Box>
+              <Button variant="contained" color="primary" href="/new">
+                Create a new entry
+              </Button>
             </Box>
           )}
           <Box

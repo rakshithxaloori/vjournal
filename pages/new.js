@@ -11,11 +11,17 @@ import Button from "@mui/material/Button";
 
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import useRecorder from "@/utils/hooks/useRecorder";
-import { createClientAPIKit, networkError, uploadToS3 } from "@/utils/APIKit";
+import {
+  createClientAPIKit,
+  createServerAPIKit,
+  networkError,
+  uploadToS3,
+} from "@/utils/APIKit";
 import { STREAM_STATUS } from "@/utils/stream";
 import FlashMessage from "@/components/flashMessage";
+import SubscriptionModal from "@/components/modals/subscription";
 
-const New = () => {
+const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
   const router = useRouter();
   const { data: session } = useSession();
   const {
@@ -36,7 +42,7 @@ const New = () => {
 
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(error || "");
 
   useEffect(() => {
     if (recordedBlob) {
@@ -167,6 +173,11 @@ const New = () => {
           )}
         </Box>
         <FlashMessage message={message} setMessage={setMessage} />
+        <SubscriptionModal
+          is_beta={is_beta}
+          cancel_at_period_end={cancel_at_period_end}
+          current_period_end={current_period_end}
+        />
       </Box>
     </>
   );
@@ -187,9 +198,23 @@ export const getServerSideProps = async (context) => {
     };
   }
   if (session?.token_key) {
-    return {
-      props: {},
-    };
+    try {
+      const APIKit = await createServerAPIKit(session.token_key);
+      const response = await APIKit.get("/subscription/check");
+      const { is_beta, cancel_at_period_end, current_period_end } =
+        response.data.payload;
+      return {
+        props: {
+          is_beta,
+          cancel_at_period_end,
+          current_period_end,
+        },
+      };
+    } catch (e) {
+      return {
+        props: { error: networkError(e) },
+      };
+    }
   }
 };
 

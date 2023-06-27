@@ -13,10 +13,11 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 import { createServerAPIKit, networkError } from "@/utils/APIKit";
 import { ENTRY_STATUS } from "@/utils/codes";
 import FlashMessage from "@/components/flashMessage";
+import { getTimeAgo } from "@/utils/time";
 
 const THUMBNAIL_WIDTH = 300;
 const ASPECT_RATIO = 16 / 9;
-const VIDEOS_FETCH_COUNT = 10;
+const VIDEOS_FETCH_COUNT = 10; // TODO
 
 export default function Home({ session, videos, error }) {
   const router = useRouter();
@@ -202,24 +203,4 @@ const Entry = ({ video, openEntry, setMessage }) => {
       </Typography>
     </Box>
   );
-};
-
-const getTimeAgo = (date) => {
-  const now = new Date();
-  const then = new Date(date);
-  const diff = now - then;
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-
-  if (hours > 24) {
-    return `${Math.floor(hours / 24)} days ago`;
-  }
-  if (hours > 0) {
-    return `${hours} hours ago`;
-  }
-  if (minutes > 0) {
-    return `${minutes} minutes ago`;
-  }
-  return `${seconds} seconds ago`;
 };
