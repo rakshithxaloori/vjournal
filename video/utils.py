@@ -49,7 +49,7 @@ def create_presigned_url(file_path):
 ############################################################################################################
 mediaconvert_client = boto3.client(
     service_name="mediaconvert",
-    aws_access_key_id=settings.AWS_MEDIACONVERT_KEY_ID,
+    aws_access_key_id=settings.AWS_MEDIACONVERT_ACCESS_KEY_ID,
     aws_secret_access_key=settings.AWS_MEDIACONVERT_SECRET_ACCESS_KEY,
     region_name=settings.AWS_MEDIACONVERT_REGION_NAME,
     endpoint_url=settings.AWS_MEDIACONVERT_ENDPOINT_URL,

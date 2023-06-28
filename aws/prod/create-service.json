@@ -1,0 +1,23 @@
+{
+  "serviceName": "vj",
+  "taskDefinition": "vj:2",
+  "cluster": "vj",
+  "loadBalancers": [
+    {
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:662294483096:targetgroup/vj/ac208f5bd7973ab1",
+      "containerName": "vj-nginx",
+      "containerPort": 80
+    }
+  ],
+  "desiredCount": 1,
+  "enableExecuteCommand": true,
+  "launchType": "FARGATE",
+  "schedulingStrategy": "REPLICA",
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": ["subnet-0356dbf336ef6cf40"],
+      "securityGroups": ["sg-09f9df15aa82cafc4"],
+      "assignPublicIp": "ENABLED"
+    }
+  }
+}

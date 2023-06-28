@@ -1,0 +1,494 @@
+{
+  "executionRoleArn": "arn:aws:iam::662294483096:role/VJ-ECS-Task-Execution",
+  "taskRoleArn": "arn:aws:iam::662294483096:role/VJ-ECS-Task",
+  "containerDefinitions": [
+    {
+      "name": "vj-nginx",
+      "image": "<NGINX_IMAGE>",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 80
+        }
+      ],
+      "pseudoTerminal": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": [
+          {
+            "name": "SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/SECRET_KEY"
+          },
+          {
+            "name": "ADMIN_URL",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/ADMIN_URL"
+          },
+          {
+            "name": "RDS_USERNAME",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_USERNAME"
+          },
+          {
+            "name": "RDS_PASSWORD",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_PASSWORD"
+          },
+          {
+            "name": "RDS_HOSTNAME",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_HOSTNAME"
+          },
+          {
+            "name": "GOOGLE_CLIENT_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/GOOGLE_CLIENT_ID"
+          },
+          {
+            "name": "GOOGLE_CLIENT_SECRET",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/GOOGLE_CLIENT_SECRET"
+          },
+          {
+            "name": "AWS_S3_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_S3_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_S3_SECRET_ACCESS_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_S3_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_SECRET_ACCESS_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_ROLE_ARN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_ROLE_ARN"
+          },
+          {
+            "name": "AWS_SNS_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_SNS_SECRET_ACCESS_KEY",
+
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_SNS_TOPIC_ARN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_TOPIC_ARN"
+          },
+          {
+            "name": "BOSS_URL",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/BOSS_URL"
+          },
+          {
+            "name": "BOSS_SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/BOSS_SECRET_KEY"
+          },
+          {
+            "name": "STRIPE_SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_SECRET_KEY"
+          },
+          {
+            "name": "STRIPE_WEBHOOK_SECRET",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_WEBHOOK_SECRET"
+          },
+          {
+            "name": "STRIPE_PRICE_ID_USD",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_PRICE_ID_USD"
+          },
+          {
+            "name": "STRIPE_PRICE_ID_INR",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_PRICE_ID_INR"
+          },
+          {
+            "name": "RESEND_API_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RESEND_API_KEY"
+          },
+          {
+            "name": "RESEND_WEBHOOK_SIGNING_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RESEND_WEBHOOK_SIGNING_KEY"
+          }
+        ],
+        "options": {
+          "awslogs-group": "/ecs/vj",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": ["sh", "-c", "curl --fail http://localhost/ht/ || exit 1"],
+        "interval": 10,
+        "retries": 10,
+        "startPeriod": 30,
+        "timeout": 10
+      }
+    },
+    {
+      "name": "vj-api",
+      "image": "<API_IMAGE>",
+      "essential": true,
+      "environmentFiles": [
+        {
+          "value": "arn:aws:s3:::vj-env/prod.env",
+          "type": "s3"
+        }
+      ],
+      "pseudoTerminal": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": [
+          {
+            "name": "SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/SECRET_KEY"
+          },
+          {
+            "name": "ADMIN_URL",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/ADMIN_URL"
+          },
+          {
+            "name": "RDS_USERNAME",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_USERNAME"
+          },
+          {
+            "name": "RDS_PASSWORD",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_PASSWORD"
+          },
+          {
+            "name": "RDS_HOSTNAME",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_HOSTNAME"
+          },
+          {
+            "name": "GOOGLE_CLIENT_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/GOOGLE_CLIENT_ID"
+          },
+          {
+            "name": "GOOGLE_CLIENT_SECRET",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/GOOGLE_CLIENT_SECRET"
+          },
+          {
+            "name": "AWS_S3_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_S3_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_S3_SECRET_ACCESS_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_S3_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_SECRET_ACCESS_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_ROLE_ARN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_ROLE_ARN"
+          },
+          {
+            "name": "AWS_SNS_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_SNS_SECRET_ACCESS_KEY",
+
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_SNS_TOPIC_ARN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_TOPIC_ARN"
+          },
+          {
+            "name": "BOSS_URL",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/BOSS_URL"
+          },
+          {
+            "name": "BOSS_SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/BOSS_SECRET_KEY"
+          },
+          {
+            "name": "STRIPE_SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_SECRET_KEY"
+          },
+          {
+            "name": "STRIPE_WEBHOOK_SECRET",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_WEBHOOK_SECRET"
+          },
+          {
+            "name": "STRIPE_PRICE_ID_USD",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_PRICE_ID_USD"
+          },
+          {
+            "name": "STRIPE_PRICE_ID_INR",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_PRICE_ID_INR"
+          },
+          {
+            "name": "RESEND_API_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RESEND_API_KEY"
+          },
+          {
+            "name": "RESEND_WEBHOOK_SIGNING_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RESEND_WEBHOOK_SIGNING_KEY"
+          }
+        ],
+        "options": {
+          "awslogs-group": "/ecs/vj",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "secrets": []
+    },
+    {
+      "name": "vj-celery",
+      "image": "<CELERY_IMAGE>",
+      "essential": true,
+      "environmentFiles": [
+        {
+          "value": "arn:aws:s3:::vj-env/prod.env",
+          "type": "s3"
+        }
+      ],
+      "pseudoTerminal": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": [
+          {
+            "name": "SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/SECRET_KEY"
+          },
+          {
+            "name": "ADMIN_URL",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/ADMIN_URL"
+          },
+          {
+            "name": "RDS_USERNAME",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_USERNAME"
+          },
+          {
+            "name": "RDS_PASSWORD",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_PASSWORD"
+          },
+          {
+            "name": "RDS_HOSTNAME",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_HOSTNAME"
+          },
+          {
+            "name": "GOOGLE_CLIENT_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/GOOGLE_CLIENT_ID"
+          },
+          {
+            "name": "GOOGLE_CLIENT_SECRET",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/GOOGLE_CLIENT_SECRET"
+          },
+          {
+            "name": "AWS_S3_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_S3_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_S3_SECRET_ACCESS_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_S3_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_SECRET_ACCESS_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_ROLE_ARN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_ROLE_ARN"
+          },
+          {
+            "name": "AWS_SNS_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_SNS_SECRET_ACCESS_KEY",
+
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_SNS_TOPIC_ARN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_TOPIC_ARN"
+          },
+          {
+            "name": "BOSS_URL",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/BOSS_URL"
+          },
+          {
+            "name": "BOSS_SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/BOSS_SECRET_KEY"
+          },
+          {
+            "name": "STRIPE_SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_SECRET_KEY"
+          },
+          {
+            "name": "STRIPE_WEBHOOK_SECRET",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_WEBHOOK_SECRET"
+          },
+          {
+            "name": "STRIPE_PRICE_ID_USD",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_PRICE_ID_USD"
+          },
+          {
+            "name": "STRIPE_PRICE_ID_INR",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_PRICE_ID_INR"
+          },
+          {
+            "name": "RESEND_API_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RESEND_API_KEY"
+          },
+          {
+            "name": "RESEND_WEBHOOK_SIGNING_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RESEND_WEBHOOK_SIGNING_KEY"
+          }
+        ],
+        "options": {
+          "awslogs-group": "/ecs/vj",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "secrets": [],
+      "dependsOn": [
+        {
+          "containerName": "vj-nginx",
+          "condition": "HEALTHY"
+        }
+      ]
+    },
+    {
+      "name": "vj-beat",
+      "image": "<BEAT_IMAGE>",
+      "essential": true,
+      "environmentFiles": [
+        {
+          "value": "arn:aws:s3:::vj-env/prod.env",
+          "type": "s3"
+        }
+      ],
+      "pseudoTerminal": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": [
+          {
+            "name": "SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/SECRET_KEY"
+          },
+          {
+            "name": "ADMIN_URL",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/ADMIN_URL"
+          },
+          {
+            "name": "RDS_USERNAME",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_USERNAME"
+          },
+          {
+            "name": "RDS_PASSWORD",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_PASSWORD"
+          },
+          {
+            "name": "RDS_HOSTNAME",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RDS_HOSTNAME"
+          },
+          {
+            "name": "GOOGLE_CLIENT_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/GOOGLE_CLIENT_ID"
+          },
+          {
+            "name": "GOOGLE_CLIENT_SECRET",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/GOOGLE_CLIENT_SECRET"
+          },
+          {
+            "name": "AWS_S3_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_S3_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_S3_SECRET_ACCESS_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_S3_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_SECRET_ACCESS_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_MEDIACONVERT_ROLE_ARN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_MEDIACONVERT_ROLE_ARN"
+          },
+          {
+            "name": "AWS_SNS_ACCESS_KEY_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_ACCESS_KEY_ID"
+          },
+          {
+            "name": "AWS_SNS_SECRET_ACCESS_KEY",
+
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_SNS_TOPIC_ARN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/AWS_SNS_TOPIC_ARN"
+          },
+          {
+            "name": "BOSS_URL",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/BOSS_URL"
+          },
+          {
+            "name": "BOSS_SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/BOSS_SECRET_KEY"
+          },
+          {
+            "name": "STRIPE_SECRET_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_SECRET_KEY"
+          },
+          {
+            "name": "STRIPE_WEBHOOK_SECRET",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_WEBHOOK_SECRET"
+          },
+          {
+            "name": "STRIPE_PRICE_ID_USD",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_PRICE_ID_USD"
+          },
+          {
+            "name": "STRIPE_PRICE_ID_INR",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/STRIPE_PRICE_ID_INR"
+          },
+          {
+            "name": "RESEND_API_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RESEND_API_KEY"
+          },
+          {
+            "name": "RESEND_WEBHOOK_SIGNING_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj/RESEND_WEBHOOK_SIGNING_KEY"
+          }
+        ],
+        "options": {
+          "awslogs-group": "/ecs/vj",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "secrets": [],
+      "dependsOn": [
+        {
+          "containerName": "vj-nginx",
+          "condition": "HEALTHY"
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "cpu": "512",
+  "memory": "2048",
+  "family": "vj"
+}

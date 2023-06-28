@@ -88,9 +88,11 @@ def webhook(request):
 
     elif poll_type == "customer.subscription.deleted":
         try:
-            tot_customer = Customer.objects.get(stripe_subscription_id=subscription.id)
-            tot_customer.cancel_at_period_end = True
-            tot_customer.save(update_fields=["cancel_at_period_end"])
+            customer_instance = Customer.objects.get(
+                stripe_subscription_id=subscription.id
+            )
+            customer_instance.cancel_at_period_end = True
+            customer_instance.save(update_fields=["cancel_at_period_end"])
         except Customer.DoesNotExist:
             del_customer_task.delay(subscription.customer)
     else:
