@@ -189,7 +189,7 @@ GOOGLE_CLIENT_SECRET = os.environ["GOOGLE_CLIENT_SECRET"]
 ################################################################################
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "https://*.vjournal.app",  # TODO
+    "https://*.vjournal.me",  # TODO
 ]
 
 if CI_CD_STAGE == DEV_STAGE:
