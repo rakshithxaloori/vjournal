@@ -51,6 +51,7 @@ print("settings.AWS_MEDIACONVERT_ENDPOINT_URL", settings.AWS_MEDIACONVERT_ENDPOI
 if settings.AWS_MEDIACONVERT_ENDPOINT_URL:
     print("Length", len(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
 else:
+    print("TYPE", type(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
     print("settings.AWS_MEDIACONVERT_ENDPOINT_URL is None")
 mediaconvert_client = boto3.client(
     service_name="mediaconvert",
