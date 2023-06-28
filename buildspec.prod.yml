@@ -38,11 +38,10 @@ phases:
   pre_build:
     commands:
       - echo Fetching env variables from S3...
-      - touch .env
-      - aws s3 cp $S3_ENV_FILE ./.env
-      - . ./.env
-      # - cat ./.env
-      - printenv
+      - touch env.bash
+      - aws s3 cp $S3_ENV_FILE env.bash
+      - bash env.bash
+      # - cat env.bash
 
       - echo CI_CD_STAGE $CI_CD_STAGE
 
@@ -51,7 +50,8 @@ phases:
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
   build:
     commands:
-      - echo MEDIACONVERT_ENDPOINT_URL $MEDIACONVERT_ENDPOINT_URL
+      - echo MC_ENDPOINT_URL $MC_ENDPOINT_URL
+      - printenv
       - DATE=$(date +"%Y%m%d_%H%M%S")
       - echo Build started on $(date +"%Y%m%d_%H%M%S")
       - echo Building the Docker images...
