@@ -51,6 +51,12 @@ print("settings.AWS_MEDIACONVERT_ENDPOINT_URL", settings.AWS_MEDIACONVERT_ENDPOI
 if settings.AWS_MEDIACONVERT_ENDPOINT_URL:
     print("Length", len(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
 else:
+    print(
+        "REGION",
+        settings.AWS_MEDIACONVERT_REGION_NAME,
+        type(settings.AWS_MEDIACONVERT_REGION_NAME),
+        len(settings.AWS_MEDIACONVERT_REGION_NAME),
+    )
     print("TYPE", type(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
     print("Length", len(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
     print("settings.AWS_MEDIACONVERT_ENDPOINT_URL is None")
