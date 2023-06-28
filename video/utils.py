@@ -47,6 +47,13 @@ def create_presigned_url(file_path):
 
 
 ############################################################################################################
+print(
+    "CI_CD_STAGE",
+    settings.CI_CD_STAGE,
+    type(settings.CI_CD_STAGE),
+    len(settings.CI_CD_STAGE),
+)
+
 print("settings.AWS_MEDIACONVERT_ENDPOINT_URL", settings.AWS_MEDIACONVERT_ENDPOINT_URL)
 if settings.AWS_MEDIACONVERT_ENDPOINT_URL:
     print("Length", len(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
