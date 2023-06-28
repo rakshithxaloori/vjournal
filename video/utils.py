@@ -71,9 +71,9 @@ print(
     len(settings.CI_CD_STAGE),
 )
 
-print("settings.WEIRD_URL", settings.WEIRD_URL)
-if settings.WEIRD_URL:
-    print("Length", len(settings.WEIRD_URL))
+print("settings.AWS_MEDIACONVERT_ENDPOINT_URL", settings.AWS_MEDIACONVERT_ENDPOINT_URL)
+if settings.AWS_MEDIACONVERT_ENDPOINT_URL:
+    print("Length", len(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
 else:
     print(
         "REGION",
@@ -81,15 +81,15 @@ else:
         type(settings.AWS_DEFAULT_REGION),
         len(settings.AWS_DEFAULT_REGION),
     )
-    print("TYPE", type(settings.WEIRD_URL))
-    print("Length", len(settings.WEIRD_URL))
-    print("settings.WEIRD_URL is None")
+    print("TYPE", type(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
+    print("Length", len(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
+    print("settings.AWS_MEDIACONVERT_ENDPOINT_URL is None")
 mediaconvert_client = boto3.client(
     service_name="mediaconvert",
     aws_access_key_id=settings.AWS_MEDIACONVERT_ACCESS_KEY_ID,
     aws_secret_access_key=settings.AWS_MEDIACONVERT_SECRET_ACCESS_KEY,
     region_name=settings.AWS_DEFAULT_REGION,
-    endpoint_url=settings.WEIRD_URL,
+    endpoint_url=settings.AWS_MEDIACONVERT_ENDPOINT_URL,
     verify=False,
 )
 
