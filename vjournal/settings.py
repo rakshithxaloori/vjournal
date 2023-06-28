@@ -154,7 +154,7 @@ USE_TZ = True
 AWS_S3_ACCESS_KEY_ID = os.environ["AWS_S3_ACCESS_KEY_ID"]
 AWS_S3_SECRET_ACCESS_KEY = os.environ["AWS_S3_SECRET_ACCESS_KEY"]
 AWS_CDN_BUCKET_NAME = os.environ["AWS_CDN_BUCKET_NAME"]
-AWS_S3_REGION_NAME = os.environ["AWS_S3_REGION_NAME"]
+AWS_DEFAULT_REGION = os.environ["AWS_DEFAULT_REGION"]
 AWS_S3_CUSTOM_DOMAIN = os.environ["AWS_S3_CUSTOM_DOMAIN"]
 AWS_QUERYSTRING_AUTH = False
 
@@ -236,8 +236,7 @@ CELERY_RESULT_SERIALIZER = "json"
 # AWS Mediaconvert
 AWS_MEDIACONVERT_ACCESS_KEY_ID = os.environ["AWS_MEDIACONVERT_ACCESS_KEY_ID"]
 AWS_MEDIACONVERT_SECRET_ACCESS_KEY = os.environ["AWS_MEDIACONVERT_SECRET_ACCESS_KEY"]
-MC_REGION_NAME = os.environ["MC_REGION_NAME"]
-MC_ENDPOINT_URL = os.environ["MC_ENDPOINT_URL"]
+WEIRD_URL = os.environ["WEIRD_URL"]
 AWS_MEDIACONVERT_ROLE_ARN = os.environ["AWS_MEDIACONVERT_ROLE_ARN"]
 
 ################################################################################
@@ -245,7 +244,6 @@ AWS_MEDIACONVERT_ROLE_ARN = os.environ["AWS_MEDIACONVERT_ROLE_ARN"]
 AWS_SNS_ACCESS_KEY_ID = os.environ["AWS_SNS_ACCESS_KEY_ID"]
 AWS_SNS_SECRET_ACCESS_KEY = os.environ["AWS_SNS_SECRET_ACCESS_KEY"]
 AWS_SNS_TOPIC_ARN = os.environ["AWS_SNS_TOPIC_ARN"]
-SNS_REGION_NAME = os.environ["SNS_REGION_NAME"]
 
 ################################################################################
 # Boss

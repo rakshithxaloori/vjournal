@@ -9,10 +9,10 @@ from video.job import job_settings
 
 
 print(
-    "settings.AWS_S3_REGION_NAME",
-    settings.AWS_S3_REGION_NAME,
-    type(settings.AWS_S3_REGION_NAME),
-    len(settings.AWS_S3_REGION_NAME),
+    "settings.AWS_DEFAULT_REGION",
+    settings.AWS_DEFAULT_REGION,
+    type(settings.AWS_DEFAULT_REGION),
+    len(settings.AWS_DEFAULT_REGION),
 )
 print(
     "settings.REDIS_URL",
@@ -25,7 +25,7 @@ s3_client = boto3.client(
     service_name="s3",
     aws_access_key_id=settings.AWS_S3_ACCESS_KEY_ID,
     aws_secret_access_key=settings.AWS_S3_SECRET_ACCESS_KEY,
-    region_name=settings.AWS_S3_REGION_NAME,
+    region_name=settings.AWS_DEFAULT_REGION,
 )
 
 
@@ -71,25 +71,25 @@ print(
     len(settings.CI_CD_STAGE),
 )
 
-print("settings.MC_ENDPOINT_URL", settings.MC_ENDPOINT_URL)
-if settings.MC_ENDPOINT_URL:
-    print("Length", len(settings.MC_ENDPOINT_URL))
+print("settings.WEIRD_URL", settings.WEIRD_URL)
+if settings.WEIRD_URL:
+    print("Length", len(settings.WEIRD_URL))
 else:
     print(
         "REGION",
-        settings.MC_REGION_NAME,
-        type(settings.MC_REGION_NAME),
-        len(settings.MC_REGION_NAME),
+        settings.AWS_DEFAULT_REGION,
+        type(settings.AWS_DEFAULT_REGION),
+        len(settings.AWS_DEFAULT_REGION),
     )
-    print("TYPE", type(settings.MC_ENDPOINT_URL))
-    print("Length", len(settings.MC_ENDPOINT_URL))
-    print("settings.MC_ENDPOINT_URL is None")
+    print("TYPE", type(settings.WEIRD_URL))
+    print("Length", len(settings.WEIRD_URL))
+    print("settings.WEIRD_URL is None")
 mediaconvert_client = boto3.client(
     service_name="mediaconvert",
     aws_access_key_id=settings.AWS_MEDIACONVERT_ACCESS_KEY_ID,
     aws_secret_access_key=settings.AWS_MEDIACONVERT_SECRET_ACCESS_KEY,
-    region_name=settings.MC_REGION_NAME,
-    endpoint_url=settings.MC_ENDPOINT_URL,
+    region_name=settings.AWS_DEFAULT_REGION,
+    endpoint_url=settings.WEIRD_URL,
     verify=False,
 )
 
@@ -168,5 +168,5 @@ sns_client = boto3.client(
     service_name="sns",
     aws_access_key_id=settings.AWS_SNS_ACCESS_KEY_ID,
     aws_secret_access_key=settings.AWS_SNS_SECRET_ACCESS_KEY,
-    region_name=settings.SNS_REGION_NAME,
+    region_name=settings.AWS_DEFAULT_REGION,
 )
