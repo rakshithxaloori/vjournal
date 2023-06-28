@@ -41,7 +41,8 @@ phases:
       - touch .env
       - aws s3 cp $S3_ENV_FILE ./.env
       - . ./.env
-      - cat ./.env
+      # - cat ./.env
+      - printenv
 
       - echo CI_CD_STAGE $CI_CD_STAGE
 
