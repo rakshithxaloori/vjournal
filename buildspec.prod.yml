@@ -77,7 +77,7 @@ phases:
 
       - cat aws/prod/taskdef.json
 
-      - printf '[{"name":"vj-api","imageUri":"%s"},{"name":"vj-nginx","imageUri":"%s"},{"name":"vj-celery","imageUri":"%s"},{"name":"vj-beat-celery","imageUri":"%s"}]' $API_URI_T $NGINX_URI_T $CELERY_URI_T $BEAT_URI_T > imagedefinitions.json
+      - printf '[{"name":"vj-api","imageUri":"%s"},{"name":"vj-nginx","imageUri":"%s"},{"name":"vj-celery","imageUri":"%s"},{"name":"vj-beat","imageUri":"%s"}]' $API_URI_T $NGINX_URI_T $CELERY_URI_T $BEAT_URI_T > imagedefinitions.json
 
 artifacts:
   files:
