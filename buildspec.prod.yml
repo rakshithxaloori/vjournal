@@ -50,6 +50,7 @@ phases:
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
   build:
     commands:
+      - echo AWS_MEDIACONVERT_ENDPOINT_URL $AWS_MEDIACONVERT_ENDPOINT_URL
       - DATE=$(date +"%Y%m%d_%H%M%S")
       - echo Build started on $(date +"%Y%m%d_%H%M%S")
       - echo Building the Docker images...
