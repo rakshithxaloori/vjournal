@@ -61,29 +61,6 @@ def create_presigned_url(file_path):
 
 
 ############################################################################################################
-import os
-
-print(os.environ)
-print(
-    "CI_CD_STAGE",
-    settings.CI_CD_STAGE,
-    type(settings.CI_CD_STAGE),
-    len(settings.CI_CD_STAGE),
-)
-
-print("settings.AWS_MEDIACONVERT_ENDPOINT_URL", settings.AWS_MEDIACONVERT_ENDPOINT_URL)
-if settings.AWS_MEDIACONVERT_ENDPOINT_URL:
-    print("Length", len(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
-else:
-    print(
-        "REGION",
-        settings.AWS_DEFAULT_REGION,
-        type(settings.AWS_DEFAULT_REGION),
-        len(settings.AWS_DEFAULT_REGION),
-    )
-    print("TYPE", type(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
-    print("Length", len(settings.AWS_MEDIACONVERT_ENDPOINT_URL))
-    print("settings.AWS_MEDIACONVERT_ENDPOINT_URL is None")
 mediaconvert_client = boto3.client(
     service_name="mediaconvert",
     aws_access_key_id=settings.AWS_MEDIACONVERT_ACCESS_KEY_ID,
