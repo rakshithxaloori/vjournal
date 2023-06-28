@@ -61,6 +61,9 @@ def create_presigned_url(file_path):
 
 
 ############################################################################################################
+import os
+
+print(os.environ)
 print(
     "CI_CD_STAGE",
     settings.CI_CD_STAGE,
