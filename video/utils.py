@@ -8,19 +8,6 @@ from video.models import Video
 from video.job import job_settings
 
 
-print(
-    "settings.AWS_DEFAULT_REGION",
-    settings.AWS_DEFAULT_REGION,
-    type(settings.AWS_DEFAULT_REGION),
-    len(settings.AWS_DEFAULT_REGION),
-)
-print(
-    "settings.REDIS_URL",
-    settings.REDIS_URL,
-    type(settings.REDIS_URL),
-    len(settings.REDIS_URL),
-)
-
 s3_client = boto3.client(
     service_name="s3",
     aws_access_key_id=settings.AWS_S3_ACCESS_KEY_ID,
