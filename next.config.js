@@ -8,19 +8,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "*.vjournal.me",
-        headers: [
-          {
-            key: "Access-Control-Allow-Origin",
-            value: "*.vjournal.me",
-          },
-          {
-            key: "Access-Control-Allow-Methods",
-            value: "GET, POST, PUT, DELETE, OPTIONS",
-          },
-        ],
-      },
-      {
         source: "/",
         headers: [
           {
@@ -30,6 +17,14 @@ const nextConfig = {
           {
             key: "Cross-Origin-Opener-Policy",
             value: "same-origin",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*.vjournal.me",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
           },
         ],
       },
