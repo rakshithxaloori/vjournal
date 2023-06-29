@@ -10,10 +10,17 @@ const SubscriptionModal = ({
   cancel_at_period_end,
   current_period_end,
 }) => {
-  const showModal =
+  let showModal = false;
+  // Never subscribed
+  if (!is_beta && current_period_end === 0) showModal = true;
+  // Subscription expired
+  if (
     !is_beta &&
     current_period_end !== 0 &&
-    new Date(current_period_end) < new Date();
+    new Date(current_period_end * 1000) < new Date()
+  )
+    showModal = true;
+
   return (
     <Modal open={showModal}>
       <Box sx={style}>
