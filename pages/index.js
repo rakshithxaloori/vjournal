@@ -106,7 +106,7 @@ export default function Home({ session, videos, error }) {
               }}
             >
               <Typography variant="h6" component="h6" color="primary">
-                Create your first journal entry!
+                Create your first video journal entry!
               </Typography>
               <Button
                 variant="contained"

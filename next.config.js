@@ -3,14 +3,23 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     unoptimized: true,
-    domains: [
-      "cdn.vjournal.app", // TODO
-      "lh3.googleusercontent.com",
-      "yt3.ggpht.com",
-    ],
+    domains: ["cdn.vjournal.me", "lh3.googleusercontent.com"],
   },
   async headers() {
     return [
+      {
+        source: "*.vjournal.me",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*.vjournal.me",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
+          },
+        ],
+      },
       {
         source: "/",
         headers: [
