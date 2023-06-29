@@ -101,19 +101,20 @@ const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
+        Talk about your day (in English, please 🥺)
+      </Typography>
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           alignItems: "center",
           height: "100%",
           width: "100%",
+          gap: 2,
         }}
       >
         <Box>
-          <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
-            Talk about your day (in English, please 🥺)
-          </Typography>
           {!recordedVideoUrl ? (
             <video ref={previewRef} autoPlay style={videoStyle}></video>
           ) : null}
@@ -126,7 +127,9 @@ const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
             ></video>
           ) : null}
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", mt: 2, gap: 2 }}>
+        <Box
+          sx={{ display: "flex", flexDirection: "column", flexGrow: 1, gap: 2 }}
+        >
           {permission ? (
             streamStatus === STREAM_STATUS.IDLE ? (
               <Button
