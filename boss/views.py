@@ -67,7 +67,7 @@ def get_subtitles_presigned_view(request):
     video.title = title
     video.save(update_fields=["title"])
 
-    send_entry_email(video, summary)
+    send_entry_email(video)
 
     presigned_post = create_presigned_s3_post(file_size, subtitles_file_path)
 
