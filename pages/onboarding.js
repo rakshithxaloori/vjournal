@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useState } from "react";
 import { getServerSession } from "next-auth/next";
 
@@ -9,6 +10,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { createServerAPIKit, networkError } from "@/utils/APIKit";
+import { RAKSHITH_TWITTER_LINK } from "@/utils/links";
 
 const Onboarding = ({
   email,
@@ -64,9 +66,26 @@ const Onboarding = ({
                 }}
               >
                 <CheckCircleIcon sx={{ color: "green" }} />
-                <Typography variant="body1" color="green">
+                <Typography
+                  variant="body1"
+                  color="green"
+                  sx={{ maxWidth: "50vw" }}
+                >
                   You have premium access and can use all the features for free.
-                  You can also choose to pay the subscription.
+                  Paying the subscription is optional. (Thank{" "}
+                  <Link
+                    href={RAKSHITH_TWITTER_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Typography
+                      sx={{ color: "green", textDecoration: "underline" }}
+                      display="inline"
+                    >
+                      Rakshith
+                    </Typography>
+                  </Link>
+                  !)
                 </Typography>
               </Box>
               <Button variant="contained" color="primary" href="/new">

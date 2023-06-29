@@ -4,8 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import { linkStyle } from "@/utils/styles";
-
-const RAKSHITH_TWITTER_LINK = "https://twitter.com/rakshithXaloori";
+import { RAKSHITH_TWITTER_LINK } from "@/utils/links";
 
 const Footer = () => {
   return (
