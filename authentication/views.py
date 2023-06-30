@@ -47,8 +47,8 @@ def user_signup_view(request):
     try:
         # Check if user is registered
         user = User.objects.get(email=user_info["email"])
-        user.first_name = user_info["given_name"] or ""
-        user.last_name = user_info["family_name"] or ""
+        user.first_name = user_info.get("given_name", "")
+        user.last_name = user_info.get("family_name", "")
         user.picture = user_info["picture"]
         user.save(update_fields=["first_name", "last_name", "picture"])
 
@@ -58,8 +58,8 @@ def user_signup_view(request):
         user = User.objects.create(
             username=user_info["id"],
             email=user_info["email"],
-            first_name=user_info["given_name"],
-            last_name=user_info["family_name"],
+            first_name=user_info.get("given_name", ""),
+            last_name=user_info.get("family_name", ""),
             picture=user_info["picture"],
             country_code=user_country_code,
         )
