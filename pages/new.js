@@ -24,6 +24,8 @@ import SubscriptionModal from "@/components/modals/subscription";
 const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
   const router = useRouter();
   const { data: session } = useSession();
+  const [message, setMessage] = useState(error || "");
+
   const {
     permission,
     stream,
@@ -33,7 +35,7 @@ const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
     stopRecording,
     recordedBlob,
     cancelVideo,
-  } = useRecorder();
+  } = useRecorder({ setMessage });
 
   const [videoHeight, setVideoHeight] = useState(0);
   const [videoWidth, setVideoWidth] = useState(0);
@@ -41,8 +43,6 @@ const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
   const [disabled, setDisabled] = useState(false);
 
   const [uploadProgress, setUploadProgress] = useState(0);
-
-  const [message, setMessage] = useState(error || "");
 
   useEffect(() => {
     if (recordedBlob) {
@@ -101,8 +101,16 @@ const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
-        Talk about your day (in English, please 🥺)
+      <Typography
+        variant="body1"
+        color="primary"
+        sx={{ mb: 2, maxWidth: "50vw" }}
+      >
+        Talk about your day{" "}
+        <Typography variant="body1" color="textSecondary">
+          - the books and articles you&apos;ve read, the places you went to, the
+          people you&apos;ve met or anything you want to talk about!
+        </Typography>
       </Typography>
       <Box
         sx={{
