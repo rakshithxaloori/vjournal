@@ -105,7 +105,7 @@ html_template = """
                                 <tr style="width:100%">
                                   <p data-id="react-email-text" style="font-size:32px;line-height:1.3;margin:16px 0;font-weight:700;color:#fff;margin-bottom:20px">Your Entry on {dateStr}</p>
                                   <p data-id="react-email-text" style="font-size:27px;line-height:24px;margin:16px 0;color:#bdbdbd">{title}</p><img data-id="react-email-img" alt="Entry&#x27;s Thumbnail" src="{thumbnailImageUrl}" width="100%" style="display:block;outline:none;border:none;text-decoration:none;margin:0 auto;margin-bottom:16px;border-radius:10px" />
-                                  <p data-id="react-email-text" style="font-size:18px;line-height:1.4;margin:16px 0;color:#fff;padding-top:24px;padding-bottom:24px;border-radius:4px">{summary}</p><a href="{entryUrl}" data-id="react-email-button" target="_blank" style="background-color:#fff;border-radius:3px;color:#000;font-size:18px;text-decoration:none;text-align:center;display:inline-block;width:100%;line-height:100%;max-width:100%;padding:19px 0px"><span><!--[if mso]><i style="letter-spacing: 0px;mso-font-width:-100%;mso-text-raise:28.5" hidden>&nbsp;</i><![endif]--></span><span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:14.25px">Watch My Entry</span><span><!--[if mso]><i style="letter-spacing: 0px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
+                                  <p data-id="react-email-text" style="font-size:18px;line-height:1.4;margin:16px 0;color:#fff;padding-top:24px;padding-bottom:24px;border-radius:4px">&quot;{summary}&quot;</p><a href="{entryUrl}" data-id="react-email-button" target="_blank" style="background-color:#fff;border-radius:3px;color:#000;font-size:18px;text-decoration:none;text-align:center;display:inline-block;width:100%;line-height:100%;max-width:100%;padding:19px 0px"><span><!--[if mso]><i style="letter-spacing: 0px;mso-font-width:-100%;mso-text-raise:28.5" hidden>&nbsp;</i><![endif]--></span><span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:14.25px">Watch My Entry</span><span><!--[if mso]><i style="letter-spacing: 0px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
                                 </tr>
                               </tbody>
                             </table>
@@ -131,7 +131,7 @@ Your Entry on {dateStr}
 
 {title}
 
-{summary}
+"{summary}"
 
 Watch My Entry [{entryUrl}]
 """
