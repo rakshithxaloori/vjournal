@@ -107,7 +107,8 @@ const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
         </Typography>
         <Typography variant="body1" color="textSecondary">
           - the books and articles you&apos;ve read, the places you went to, the
-          people you&apos;ve met or anything you want to talk about!
+          people you&apos;ve met or anything you want to talk about! (in
+          English, perhaps)
         </Typography>
       </Box>
       <Box
