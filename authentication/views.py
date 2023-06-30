@@ -47,6 +47,11 @@ def user_signup_view(request):
     try:
         # Check if user is registered
         user = User.objects.get(email=user_info["email"])
+        user.first_name = user_info["given_name"]
+        user.last_name = user_info["family_name"]
+        user.picture = user_info["picture"]
+        user.save(update_fields=["first_name", "last_name", "picture"])
+
     except User.DoesNotExist:
         # Create User
         user_country_code = get_country_code(get_ip_address(request))
