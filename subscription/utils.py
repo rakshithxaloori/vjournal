@@ -1,7 +1,7 @@
 from subscription.models import Customer
 
 
-BETA_USERS = ["rakshithaloori10sa@gmail.com"]
+BETA_USERS = ["rakshithaloori10sa@gmail.com", "shreyathokala60@gmail.com"]
 
 
 def get_subscription_info(user):
