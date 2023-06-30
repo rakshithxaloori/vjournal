@@ -6,7 +6,7 @@ const MIME_TYPE = "video/webm;codecs=vp9,opus";
 const TIME_SLICE = 10 * 1000; // 10 seconds
 const MAX_RECORD_TIME = 60 * 60 * 1000; // 60 minutes
 
-const useRecorder = () => {
+const useRecorder = ({ setMessage }) => {
   const mediaRecorderRef = useRef(null);
   const previewRef = useRef(null);
 
@@ -32,22 +32,25 @@ const useRecorder = () => {
   useEffect(() => {
     // Stop the recording if max recording time is reached
     if (localVideoChunks.current.length > MAX_RECORD_TIME / TIME_SLICE) {
+      setMessage("Max recording time reached. Finishing recording.");
       stopRecording();
     }
   }, [localVideoChunks.current.length]);
 
-  useEffect(() => {
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [stream, streamStatus]);
+  // TODO: fix this
+  // useEffect(() => {
+  //   document.addEventListener("visibilitychange", handleVisibilityChange);
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //   };
+  // }, [stream, streamStatus]);
 
-  const handleVisibilityChange = () => {
-    if (streamStatus === STREAM_STATUS.RECORDING) return;
-    if (document.visibilityState === "hidden") stopStream();
-    else if (document.visibilityState === "visible") startStream();
-  };
+  // const handleVisibilityChange = () => {
+  //   console.log("visibility change", document.visibilityState);
+  //   if (streamStatus === STREAM_STATUS.RECORDING) return;
+  //   if (document.visibilityState === "hidden") stopStream();
+  //   else if (document.visibilityState === "visible") startStream();
+  // };
 
   const startStream = async () => {
     if (stream !== null) return;
@@ -82,10 +85,12 @@ const useRecorder = () => {
         //set videostream to live feed player
         previewRef.current.srcObject = videoStream;
       } catch (err) {
-        alert(err.message);
+        setMessage(err.message);
       }
     } else {
-      alert("The MediaRecorder API is not supported in your browser.");
+      setMessage(
+        "Recording is not supported in this browser. Please use Chrome or Firefox."
+      );
     }
   };
 
