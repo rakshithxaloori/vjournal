@@ -18,17 +18,13 @@ const nextConfig = {
             key: "Cross-Origin-Opener-Policy",
             value: "same-origin",
           },
-          // {
-          //   key: "Access-Control-Allow-Origin",
-          //   value: "*.vjournal.me",
-          // },
-          // {
-          //   key: "Access-Control-Allow-Methods",
-          //   value: "GET, POST, PUT, DELETE, OPTIONS",
-          // },
         ],
       },
     ];
+  },
+  i18n: {
+    locales: ["en-US", "en-IN"],
+    defaultLocale: "en-US",
   },
 };
 

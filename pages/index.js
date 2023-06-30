@@ -21,6 +21,8 @@ const VIDEOS_FETCH_COUNT = 10; // TODO
 
 export default function Home({ session, videos, error }) {
   const router = useRouter();
+  console.log(router.locale);
+  console.log(router.locales);
 
   const [index, setIndex] = useState(0);
   const [message, setMessage] = useState(error || "");
