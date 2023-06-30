@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import { STREAM_STATUS } from "@/utils/stream";
 
-const MIME_TYPE = "video/webm;codecs=vp9,opus";
+const MIME_TYPE = "video/webm";
 const TIME_SLICE = 10 * 1000; // 10 seconds
 const MAX_RECORD_TIME = 60 * 60 * 1000; // 60 minutes
 

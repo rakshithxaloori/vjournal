@@ -101,17 +101,15 @@ const New = ({ is_beta, cancel_at_period_end, current_period_end, error }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Typography
-        variant="body1"
-        color="primary"
-        sx={{ mb: 2, maxWidth: "50vw" }}
-      >
-        Talk about your day{" "}
+      <Box sx={{ mb: 2, maxWidth: "50vw" }}>
+        <Typography variant="body1" color="primary">
+          Talk about your day{" "}
+        </Typography>
         <Typography variant="body1" color="textSecondary">
           - the books and articles you&apos;ve read, the places you went to, the
           people you&apos;ve met or anything you want to talk about!
         </Typography>
-      </Typography>
+      </Box>
       <Box
         sx={{
           display: "flex",
