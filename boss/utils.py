@@ -62,7 +62,7 @@ def send_entry_email(video):
     )
 
     send_email(
-        from_email="entry@vjournal.me",
+        from_email="VJournal <entry@vjournal.me>",
         to_email=video.user.email,
         subject="{}'s VJournal Entry".format(dateStr),
         html=html,
