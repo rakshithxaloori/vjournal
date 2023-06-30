@@ -37,11 +37,11 @@ const Mobile = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       {/* TODO show screenshots of how the tool works */}
-      <Typography variant="h5" component="h5" sx={{ mb: 1 }} color="primary">
+      <Typography variant="h5" sx={{ mb: 1 }} color="primary">
         Sorry, we don&apos;t support mobile yet.
       </Typography>
-      <Typography variant="body1" component="p" sx={{ mb: 1 }} color="primary">
-        Please use a desktop browser to access VJournal.
+      <Typography variant="body1" color="primary">
+        Please use a desktop or a laptop browser to access VJournal.
       </Typography>
     </Box>
   );
