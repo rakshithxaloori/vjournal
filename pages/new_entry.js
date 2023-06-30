@@ -14,12 +14,6 @@ import * as React from "react";
 
 import Copier from "@/components/copier";
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
-
-// const brandLogoUrl = `logo.png`;
-
 export const NewEntryComponent = ({
   brandLogoUrl,
   thumbnailImageUrl,
@@ -56,7 +50,7 @@ export const NewEntryComponent = ({
                   alt="Entry's Thumbnail"
                   style={thumbnailImageStyle}
                 />
-                <Text style={summaryStyle}>{summary}</Text>
+                <Text style={summaryStyle}>&quot;{summary}&quot;</Text>
                 <Button pY={19} style={button} href={entryUrl}>
                   Watch My Entry
                 </Button>
