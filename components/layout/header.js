@@ -13,6 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 
@@ -94,6 +95,15 @@ const Header = () => {
                 open={open}
                 onClose={handleClose}
               >
+                <MenuItem
+                  onClick={() => {
+                    router.push("/new");
+                    handleClose();
+                  }}
+                >
+                  <AddCircleRoundedIcon sx={{ mr: 1 }} />
+                  New Entry
+                </MenuItem>
                 <MenuItem
                   onClick={() => {
                     router.push("/account");
