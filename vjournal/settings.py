@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "video",
     "subscription",
     "emails",
+    "account",
     "health",
     "boss",
 ]
