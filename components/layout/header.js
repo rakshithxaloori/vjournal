@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -31,13 +31,6 @@ const Header = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const onSignin = (e) => {
-    e.preventDefault();
-    signIn("google", {
-      callbackUrl: `${window.location.origin}/`,
-    });
   };
 
   return (
@@ -124,20 +117,6 @@ const Header = () => {
                   Sign Out
                 </MenuItem>
               </Menu>
-              {/* <Link
-                href="/auth/signout"
-                onClick={onSignout}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Typography variant="body2" color="primary" sx={{ mr: 2 }}>
-                  Sign Out
-                </Typography>
-              </Link> */}
             </>
           )}
         </Box>
