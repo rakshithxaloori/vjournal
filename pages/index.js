@@ -80,43 +80,7 @@ export default function Home({ session, videos, error }) {
             </Grid>
           </>
         ) : (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: 1.5,
-              mt: 10,
-            }}
-          >
-            <Box
-              sx={{
-                bgcolor: "grey.400",
-                borderRadius: "10px",
-                width: THUMBNAIL_WIDTH,
-                height: THUMBNAIL_WIDTH / ASPECT_RATIO,
-              }}
-            ></Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                gap: "10px",
-              }}
-            >
-              <Typography variant="h6" component="h6" color="primary">
-                Create your first video journal entry!
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => router.push("/new")}
-              >
-                New Entry
-              </Button>
-            </Box>
-          </Box>
+          <Empty />
         )}
         <FlashMessage message={message} setMessage={setMessage} />
       </main>
@@ -147,6 +111,91 @@ export const getServerSideProps = async (context) => {
       session,
     },
   };
+};
+
+const Empty = () => {
+  const router = useRouter();
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <Box>
+        <Grid container spacing={4}>
+          <Grid item xs={4}>
+            <Typography variant="h3" color="primary">
+              How it works
+            </Typography>
+            <Typography variant="h6" color="textSecondary">
+              Hit record and talk about your day. Make a video journal entry.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => router.push("/new")}
+              sx={{ mt: 1 }}
+            >
+              Get Started
+            </Button>
+          </Grid>
+          <Grid item xs={8}>
+            <Box style={screenShotParentStyle}>
+              <Image
+                src="/newScreenshot.png"
+                alt="Create Entry"
+                fill
+                style={{
+                  borderRadius: "10px",
+                  objectFit: "contain",
+                }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+      <Box>
+        <Grid container spacing={4}>
+          <Grid item xs={8}>
+            <Box style={screenShotParentStyle}>
+              <Image
+                src="/entryScreenshot.png"
+                alt="Watch My Entry"
+                fill
+                style={{
+                  borderRadius: "10px",
+                  objectFit: "contain",
+                }}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={4}>
+            <Box>
+              <Typography variant="h3" color="primary">
+                What you get
+              </Typography>
+              <Typography variant="h6" color="textSecondary">
+                Watch your entry. Read the summary to get a quick recap of the
+                day
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => router.push("/new")}
+                sx={{ mt: 1 }}
+              >
+                Create your first entry
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
+  );
+};
+
+const screenShotParentStyle = {
+  borderRadius: "10px",
+  border: "1px solid #eaeaea",
+  boxShadow: "0px 0px 10px 5px #fff",
+  position: "relative",
+  paddingTop: "56.25%", // Maintain aspect ratio
 };
 
 const Entry = ({ video, openEntry, setMessage }) => {
