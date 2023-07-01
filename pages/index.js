@@ -126,6 +126,9 @@ const Empty = () => {
             <Typography variant="h6" color="textSecondary">
               Hit record and talk about your day. Make a video journal entry.
             </Typography>
+            <Typography variant="h6" color="textSecondary">
+              Your entries are private and only you have the access.
+            </Typography>
             <Button
               variant="contained"
               color="primary"
