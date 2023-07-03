@@ -124,7 +124,7 @@ const Empty = () => {
               How it works
             </Typography>
             <Typography variant="h6" color="textSecondary">
-              Hit record and talk about your day. Make a video journal entry.
+              Hit record and talk about your day.
             </Typography>
             <Typography variant="h6" color="textSecondary">
               Your entries are private and only you have the access.
