@@ -118,6 +118,7 @@ const Entry = ({ video }) => {
                 onBlur={() => setIsEditTitle(false)}
                 onKeyDown={onKeyDown}
                 sx={{ width: "100%" }}
+                helperText="Press Enter to save"
               />
             ) : (
               <Typography
@@ -148,6 +149,7 @@ const Entry = ({ video }) => {
                   onKeyDown={onKeyDown}
                   multiline
                   sx={{ width: "100%" }}
+                  helperText="Press Enter to save"
                 />
               ) : (
                 <>
