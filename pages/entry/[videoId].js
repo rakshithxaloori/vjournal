@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { getServerSession } from "next-auth/next";
 import dynamic from "next/dynamic";
 
@@ -7,12 +7,54 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 
-import { createServerAPIKit, networkError } from "@/utils/APIKit";
+import {
+  createServerAPIKit,
+  createClientAPIKit,
+  networkError,
+} from "@/utils/APIKit";
 
 const Entry = ({ video }) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+  const [title, setTitle] = useState(video.title);
+  const [summary, setSummary] = useState(video.summary || "");
+
+  const [isEditTitle, setIsEditTitle] = useState(false);
+  const [isEditSummary, setIsEditSummary] = useState(false);
+
+  const [message, setMessage] = useState("");
+
+  const handleChangeTitle = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handleChangeSummary = (e) => {
+    // Replace multiple newlines with one
+    e.target.value = e.target.value.replace(/(\r\n|\n|\r){2,}/g, "$1\n");
+    setSummary(e.target.value);
+  };
+
+  const onKeyDown = async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      e.target.blur();
+
+      // Save the title and summary
+      try {
+        const APIKit = await createClientAPIKit();
+        const res = await APIKit.post(`/api/video/update/`, {
+          video_id: video.id,
+          title,
+          summary,
+        });
+      } catch (e) {
+        setMessage(networkError(e));
+      }
+    }
+  };
 
   useEffect(() => {
     const loadDash = async () => {
@@ -37,7 +79,7 @@ const Entry = ({ video }) => {
     <>
       <Head>
         <title>
-          {video?.title} | {getPrettyDate(video.created_at)}
+          {title} | {getPrettyDate(video.created_at)}
         </title>
         <meta
           name="description"
@@ -66,24 +108,61 @@ const Entry = ({ video }) => {
             <Typography variant="h4" color="primary" sx={{ mb: 1 }}>
               {getPrettyDate(video.created_at)}
             </Typography>
-            <Typography variant="h6" color="textSecondary">
-              {video.title}
-            </Typography>
+            {isEditTitle ? (
+              <TextField
+                id="title"
+                label="Title"
+                variant="filled"
+                value={title}
+                onChange={handleChangeTitle}
+                onBlur={() => setIsEditTitle(false)}
+                onKeyDown={onKeyDown}
+                sx={{ width: "100%" }}
+              />
+            ) : (
+              <Typography
+                variant="h6"
+                color="textSecondary"
+                onClick={() => setIsEditTitle(true)}
+              >
+                {title}
+              </Typography>
+            )}
           </Box>
           <video ref={videoRef} autoPlay controls style={videoStyle} />
-          {video.summary && (
+          {summary && (
             <Box
               sx={{
                 width: "100%",
                 mt: 2,
               }}
             >
-              <Typography variant="body1" color="primary">
-                Summary
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                {video.summary}
-              </Typography>
+              {isEditSummary ? (
+                <TextField
+                  id="summary"
+                  label="Summary"
+                  variant="filled"
+                  value={summary}
+                  onChange={handleChangeSummary}
+                  onBlur={() => setIsEditSummary(false)}
+                  onKeyDown={onKeyDown}
+                  multiline
+                  sx={{ width: "100%" }}
+                />
+              ) : (
+                <>
+                  <Typography variant="body1" color="primary">
+                    Summary
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    onClick={() => setIsEditSummary(true)}
+                  >
+                    {summary}
+                  </Typography>
+                </>
+              )}
             </Box>
           )}
         </Box>
