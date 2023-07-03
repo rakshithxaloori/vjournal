@@ -196,10 +196,10 @@ if CI_CD_STAGE == DEV_STAGE:
 
 ################################################################################
 # CORS
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
-CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://\w+\.vjournal\.app$"]  # TODO
+CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://\w+\.vjournal\.me$"]
 
 if CI_CD_STAGE == DEV_STAGE:
+    CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
     CORS_ALLOWED_ORIGIN_REGEXES.append(
         r"^https://\w+\.ngrok-free\.app$",
     )

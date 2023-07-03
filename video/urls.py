@@ -11,5 +11,6 @@ urlpatterns = [
         views.get_video_detail_view,
         name="get video detail view",
     ),
+    path("update/", views.update_video_view, name="update video view"),
     path("sns/", views.mediaconvert_sns_view, name="mediaconvert sns view"),
 ]

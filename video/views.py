@@ -21,7 +21,7 @@ from knox.auth import TokenAuthentication
 
 
 from vjournal.utils import BAD_REQUEST_RESPONSE
-from video.models import Video
+from video.models import Video, Summary
 from video.utils import create_presigned_s3_post, create_mediaconvert_job, sns_client
 from video.serializers import VideoShortSerializer, VideoLongSerializer
 from video.tasks import del_objects_from_s3_task, create_thumbnail_instance_task
@@ -152,6 +152,28 @@ def get_video_detail_view(request):
                 "details": "Video retrieved successfully",
                 "payload": {"video": serializer.data},
             },
+            status=status.HTTP_200_OK,
+        )
+    except Video.DoesNotExist:
+        return BAD_REQUEST_RESPONSE
+
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def update_video_view(request):
+    video_id = request.data.get("video_id", None)
+    title = request.data.get("title", None)
+    summary = request.data.get("summary", None)
+
+    if None in [video_id, title, summary]:
+        return BAD_REQUEST_RESPONSE
+
+    try:
+        Video.objects.filter(id=video_id, user=request.user).update(title=title)
+        Summary.objects.filter(video_id=video_id).update(text=summary)
+        return JsonResponse(
+            {"details": "Video updated successfully"},
             status=status.HTTP_200_OK,
         )
     except Video.DoesNotExist:
