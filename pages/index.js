@@ -123,10 +123,10 @@ const Empty = () => {
             <Typography variant="h3" color="primary">
               How it works
             </Typography>
-            <Typography variant="h6" color="textSecondary">
+            <Typography variant="body1" color="textSecondary">
               Hit record and talk about your day.
             </Typography>
-            <Typography variant="h6" color="textSecondary">
+            <Typography variant="body1" color="textSecondary">
               Your entries are private and only you have the access.
             </Typography>
             <Button
@@ -173,7 +173,7 @@ const Empty = () => {
               <Typography variant="h3" color="primary">
                 What you get
               </Typography>
-              <Typography variant="h6" color="textSecondary">
+              <Typography variant="body1" color="textSecondary">
                 Watch your entry. Read the summary to get a quick recap of the
                 day
               </Typography>
