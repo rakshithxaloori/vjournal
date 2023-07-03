@@ -24,37 +24,37 @@ const Entry = ({ video }) => {
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [isEditSummary, setIsEditSummary] = useState(false);
 
-  // const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
-  // const handleChangeTitle = (e) => {
-  //   setTitle(e.target.value);
-  // };
+  const handleChangeTitle = (e) => {
+    setTitle(e.target.value);
+  };
 
-  // const handleChangeSummary = (e) => {
-  //   // Replace multiple newlines with one
-  //   e.target.value = e.target.value.replace(/(\r\n|\n|\r){2,}/g, "$1\n");
-  //   setSummary(e.target.value);
-  // };
+  const handleChangeSummary = (e) => {
+    // Replace multiple newlines with one
+    e.target.value = e.target.value.replace(/(\r\n|\n|\r){2,}/g, "$1\n");
+    setSummary(e.target.value);
+  };
 
-  // const onKeyDown = async (e) => {
-  //   if (e.key === "Enter") {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     e.target.blur();
+  const onKeyDown = async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      e.target.blur();
 
-  //     // Save the title and summary
-  //     try {
-  //       const APIKit = await createClientAPIKit();
-  //       const res = await APIKit.post(`/api/video/update/`, {
-  //         video_id: video.id,
-  //         title,
-  //         summary,
-  //       });
-  //     } catch (e) {
-  //       setMessage(networkError(e));
-  //     }
-  //   }
-  // };
+      // Save the title and summary
+      try {
+        const APIKit = await createClientAPIKit();
+        const res = await APIKit.post(`/api/video/update/`, {
+          video_id: video.id,
+          title,
+          summary,
+        });
+      } catch (e) {
+        setMessage(networkError(e));
+      }
+    }
+  };
 
   useEffect(() => {
     const loadDash = async () => {
@@ -115,7 +115,7 @@ const Entry = ({ video }) => {
                 variant="filled"
                 value={title}
                 onChange={handleChangeTitle}
-                // onBlur={() => setIsEditTitle(false)}
+                onBlur={() => setIsEditTitle(false)}
                 onKeyDown={onKeyDown}
                 sx={{ width: "100%" }}
               />
@@ -123,7 +123,7 @@ const Entry = ({ video }) => {
               <Typography
                 variant="h6"
                 color="textSecondary"
-                // onClick={() => setIsEditTitle(true)}
+                onClick={() => setIsEditTitle(true)}
               >
                 {title}
               </Typography>
@@ -144,7 +144,7 @@ const Entry = ({ video }) => {
                   variant="filled"
                   value={summary}
                   onChange={handleChangeSummary}
-                  // onBlur={() => setIsEditSummary(false)}
+                  onBlur={() => setIsEditSummary(false)}
                   onKeyDown={onKeyDown}
                   multiline
                   sx={{ width: "100%" }}
@@ -157,7 +157,7 @@ const Entry = ({ video }) => {
                   <Typography
                     variant="body1"
                     color="textSecondary"
-                    // onClick={() => setIsEditSummary(true)}
+                    onClick={() => setIsEditSummary(true)}
                   >
                     {summary}
                   </Typography>
