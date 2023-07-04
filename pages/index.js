@@ -14,6 +14,7 @@ import { createServerAPIKit, networkError } from "@/utils/APIKit";
 import { ENTRY_STATUS } from "@/utils/codes";
 import FlashMessage from "@/components/flashMessage";
 import { getTimeAgo } from "@/utils/time";
+import Empty from "@/components/homeEmpty";
 
 const THUMBNAIL_WIDTH = 300;
 const ASPECT_RATIO = 16 / 9;
@@ -99,7 +100,7 @@ export const getServerSideProps = async (context) => {
       return {
         props: {
           session,
-          videos,
+          videos: [],
         },
       };
     } catch (e) {
@@ -111,94 +112,6 @@ export const getServerSideProps = async (context) => {
       session,
     },
   };
-};
-
-const Empty = () => {
-  const router = useRouter();
-  return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <Box>
-        <Grid container spacing={4}>
-          <Grid item xs={4}>
-            <Typography variant="h3" color="primary">
-              How it works
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Hit record and talk about your day.
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Your entries are private and only you have the access.
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => router.push("/new")}
-              sx={{ mt: 1 }}
-            >
-              Get Started
-            </Button>
-          </Grid>
-          <Grid item xs={8}>
-            <Box style={screenShotParentStyle}>
-              <Image
-                src="/newScreenshot.png"
-                alt="Create Entry"
-                fill
-                style={{
-                  borderRadius: "10px",
-                  objectFit: "contain",
-                }}
-              />
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box>
-        <Grid container spacing={4}>
-          <Grid item xs={8}>
-            <Box style={screenShotParentStyle}>
-              <Image
-                src="/entryScreenshot.png"
-                alt="Watch My Entry"
-                fill
-                style={{
-                  borderRadius: "10px",
-                  objectFit: "contain",
-                }}
-              />
-            </Box>
-          </Grid>
-          <Grid item xs={4}>
-            <Box>
-              <Typography variant="h3" color="primary">
-                What you get
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                Watch your entry. Read the summary to get a quick recap of the
-                day
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => router.push("/new")}
-                sx={{ mt: 1 }}
-              >
-                Create your first entry
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-    </Box>
-  );
-};
-
-const screenShotParentStyle = {
-  borderRadius: "10px",
-  border: "1px solid #eaeaea",
-  boxShadow: "0px 0px 10px 5px #fff",
-  position: "relative",
-  paddingTop: "56.25%", // Maintain aspect ratio
 };
 
 const Entry = ({ video, openEntry, setMessage }) => {

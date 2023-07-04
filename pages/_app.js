@@ -9,6 +9,9 @@ import { isMobile } from "react-device-detect";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+
+import Empty from "@/components/homeEmpty";
 
 export default function App({
   Component,
@@ -43,6 +46,8 @@ const Mobile = () => {
       <Typography variant="body1" color="primary">
         Please use a desktop or a laptop browser to access VJournal.
       </Typography>
+      <Divider sx={{ my: 2 }} />
+      <Empty />
     </Box>
   );
 };
