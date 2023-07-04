@@ -1,13 +1,23 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
+import { isMobile } from "react-device-detect";
+
 const Empty = () => {
   const router = useRouter();
+  const [showMobile, setShowMobile] = useState(false);
+
+  useEffect(() => {
+    if (isMobile) {
+      setShowMobile(true);
+    }
+  }, []);
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 6 }}>
       <Box>
@@ -22,14 +32,16 @@ const Empty = () => {
             <Typography variant="body1" color="textSecondary">
               Your entries are private and only you have the access.
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => router.push("/new")}
-              sx={{ mt: 1 }}
-            >
-              Get Started
-            </Button>
+            {showMobile ? null : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => router.push("/new")}
+                sx={{ mt: 1 }}
+              >
+                Get Started
+              </Button>
+            )}
           </Grid>
           <Grid item xs={12} sm={12} md={8} lg={8}>
             <Box style={screenShotParentStyle}>
@@ -70,14 +82,16 @@ const Empty = () => {
                 Watch your entry. Read the summary to get a quick recap of the
                 day
               </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => router.push("/new")}
-                sx={{ mt: 1 }}
-              >
-                Create your first entry
-              </Button>
+              {showMobile ? null : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => router.push("/new")}
+                  sx={{ mt: 1 }}
+                >
+                  Create your first entry
+                </Button>
+              )}
             </Box>
           </Grid>
         </Grid>
