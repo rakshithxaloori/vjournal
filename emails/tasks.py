@@ -7,14 +7,13 @@ from django.conf import settings
 from vjournal.celery import app as celery_app
 from emails.models import Email
 
-
 resend.api_key = settings.RESEND_API_KEY
 
 
 @celery_app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        crontab(minute=5),
+        crontab(minute="*/5"),
         send_emails_task.s(),
         name="send emails every 5 minutes",
     )

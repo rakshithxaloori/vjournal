@@ -239,6 +239,16 @@ def mediaconvert_sns_view(request):
                 )
 
             except Video.DoesNotExist:
+                del_objects_from_s3_task.delay(video_file_path)
+                mp4_file_path = re.sub(
+                    r"\/[a-zA-Z0-9\-]+\.mpd", "_video.mp4", video_file_path
+                )
+                audio_file_path = re.sub(
+                    r"\/[a-zA-Z0-9\-]+\.mpd", "_audio.mp4", video_file_path
+                )
+                del_objects_from_s3_task.delay(mp4_file_path)
+                del_objects_from_s3_task.delay(audio_file_path)
+                del_objects_from_s3_task.delay(thumbnail_file_path)
                 print("Video.DoesNotExist", video_id, job_id)
         except Exception as e:
             print("Exception", e)
