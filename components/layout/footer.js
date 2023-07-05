@@ -65,7 +65,7 @@ const Footer = () => {
         </Link>
       </Typography>
       <Typography component="span" color="primary" sx={{ fontSize: 12 }}>
-        © 2023 JuntoX
+        © {new Date().getFullYear()} JuntoX
       </Typography>
     </Box>
   );
