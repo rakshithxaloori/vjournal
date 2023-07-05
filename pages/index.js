@@ -100,7 +100,7 @@ export const getServerSideProps = async (context) => {
       return {
         props: {
           session,
-          videos: [],
+          videos,
         },
       };
     } catch (e) {
