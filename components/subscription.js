@@ -13,8 +13,8 @@ const Subscription = ({
   is_beta,
   cancel_at_period_end,
   current_period_end,
+  showCreateEntry = false,
 }) => {
-  const [isUsd, setIsUsd] = useState(false); // TODO
   const showManageSubscription = current_period_end !== 0;
 
   return (
@@ -72,9 +72,11 @@ const Subscription = ({
                 !)
               </Typography>
             </Box>
-            <Button variant="contained" color="primary" href="/new">
-              Create new entry
-            </Button>
+            {showCreateEntry && (
+              <Button variant="contained" color="primary" href="/new">
+                Create new entry
+              </Button>
+            )}
           </Box>
         )}
         <Box
@@ -105,7 +107,7 @@ const Subscription = ({
             }}
           >
             <Typography variant="h3" color="primary">
-              {isUsd ? "$3" : "₹240"}
+              $3
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", ml: 1 }}>
               <Typography variant="body2" color="primary">
@@ -137,7 +139,7 @@ const Subscription = ({
           {cancel_at_period_end !== null && (
             <Typography
               variant="body1"
-              color="primary"
+              color="textSecondary"
               sx={{ mb: 1, textDecoration: "underline" }}
             >
               Subscription Status:{" "}
@@ -145,7 +147,7 @@ const Subscription = ({
             </Typography>
           )}
           {current_period_end !== 0 && (
-            <Typography variant="body1" color="primary" sx={{ mb: 1 }}>
+            <Typography variant="body1" color="textSecondary" sx={{ mb: 1 }}>
               Your current billing will end on{" "}
               {new Date(current_period_end).toDateString()}
             </Typography>
@@ -153,7 +155,7 @@ const Subscription = ({
           {showManageSubscription ? (
             <CustomerPortalButton />
           ) : (
-            <SubscriptionButton email={email} is_usd={isUsd} />
+            <SubscriptionButton email={email} />
           )}
         </Box>
       </Box>
@@ -175,18 +177,37 @@ const NEXT_PUBLIC_STRIPE_USD_BUY_LINK =
 const NEXT_PUBLIC_STRIPE_INR_BUY_LINK =
   process.env.NEXT_PUBLIC_STRIPE_INR_BUY_LINK;
 
-const SubscriptionButton = ({ email, is_usd = true }) => {
-  const stripeBuyLink = is_usd
-    ? NEXT_PUBLIC_STRIPE_USD_BUY_LINK
-    : NEXT_PUBLIC_STRIPE_INR_BUY_LINK;
+const SubscriptionButton = ({ email }) => {
   return (
-    <Button
-      href={`${stripeBuyLink}?prefilled_email=${encodeURIComponent(email)}`}
-      variant="contained"
-      sx={{ width: "100%" }}
+    <Box
+      sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 1 }}
     >
-      Subscribe
-    </Button>
+      <Box
+        sx={{ width: "100%", display: "flex", flexDirection: "row", gap: 2 }}
+      >
+        <Button
+          href={`${NEXT_PUBLIC_STRIPE_USD_BUY_LINK}?prefilled_email=${encodeURIComponent(
+            email
+          )}`}
+          variant="contained"
+          sx={{ width: "100%" }}
+        >
+          Subscribe ($USD)
+        </Button>
+        <Button
+          href={`${NEXT_PUBLIC_STRIPE_INR_BUY_LINK}?prefilled_email=${encodeURIComponent(
+            email
+          )}`}
+          variant="contained"
+          sx={{ width: "100%" }}
+        >
+          Subscribe (₹INR)
+        </Button>
+      </Box>
+      <Typography variant="body2" color="primary">
+        Choose ₹INR if you are from India and $USD otherwise.
+      </Typography>
+    </Box>
   );
 };
 

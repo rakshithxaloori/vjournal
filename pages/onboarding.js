@@ -31,6 +31,7 @@ const Onboarding = ({
         is_beta={is_beta}
         cancel_at_period_end={cancel_at_period_end}
         current_period_end={current_period_end}
+        showCreateEntry={true}
       />
       <FlashMessage message={message} setMessage={setMessage} />
     </>
