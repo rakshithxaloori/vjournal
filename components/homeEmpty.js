@@ -47,19 +47,9 @@ const Empty = () => {
           </Grid>
           <Grid item xs={12} sm={12} md={8} lg={8}>
             <Box style={screenShotParentStyle}>
-              {/* <Image
-                src="/newScreenshot.png"
-                alt="Create Entry"
-                fill
-                style={{
-                  borderRadius: "10px",
-                  objectFit: "contain",
-                }}
-              /> */}
               <video
                 src={NEXT_PUBLIC_DEMO_URL}
                 autoPlay
-                loop
                 controls
                 style={{
                   borderRadius: "10px",
