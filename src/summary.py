@@ -17,7 +17,7 @@ def get_summary(transcription, token_count):
             {
                 "role": "system",
                 "content": """
-                You will be provided with my journal entry (delimited with XML tags) about my day. Summarize my journal entry in not more than 3 sentences. And also generate a title of not more than 100 characters. 
+                You will be provided with your journal entry (delimited with XML tags) about your day. Summarize the journal entry in not more than 3 sentences. And also generate a title of not more than 100 characters. Make the summary in first person as "I".
 
                 Produce the output as JSON. The format should be as follows:
                 ```
