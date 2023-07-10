@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
+import SupportClipboard from "@/components/supportClipboard";
+
 const PrivacyPolicy = () => {
   return (
     <>
@@ -120,12 +122,13 @@ const PrivacyPolicy = () => {
             <Typography variant="h5" color="primary">
               Your Choices
             </Typography>
-            <Typography variant="body1" color="primary">
-              You can opt out of receiving promotional emails and newsletters
-              from us by following the instructions in the email. You can also
-              update your personal information by contacting us at <EmailLink />
-              .
-            </Typography>
+            <SupportClipboard>
+              <Typography variant="body1" color="primary">
+                You can opt out of receiving promotional emails and newsletters
+                from us by following the instructions in the email. You can also
+                update your personal information by contacting us at
+              </Typography>
+            </SupportClipboard>
           </Box>
 
           <Box sx={{ mb: 2 }}>
@@ -171,10 +174,12 @@ const PrivacyPolicy = () => {
               {" "}
               Contact Us
             </Typography>
-            <Typography variant="body1" color="primary">
-              If you have any questions or concerns about this Privacy Policy,
-              please contact us at <EmailLink />.
-            </Typography>
+            <SupportClipboard>
+              <Typography variant="body1" color="primary">
+                If you have any questions or concerns about this Privacy Policy,
+                please contact us at
+              </Typography>
+            </SupportClipboard>
           </Box>
 
           {/* <Typography variant="h5" color="primary"></Typography>
@@ -186,14 +191,3 @@ const PrivacyPolicy = () => {
 };
 
 export default PrivacyPolicy;
-
-const EmailLink = () => (
-  <Link
-    href="mailto:support@vjournal.me"
-    rel="noopener noreferrer"
-    target="_blank"
-    style={{ color: "#fff" }}
-  >
-    support@vjournal.me
-  </Link>
-);

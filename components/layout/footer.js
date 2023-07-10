@@ -40,6 +40,16 @@ const Footer = () => {
         </Typography>
       </Link>
       <Link
+        href="/faq"
+        style={linkStyle}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <Typography component="span" color="primary">
+          FAQ
+        </Typography>
+      </Link>
+      <Link
         href="/support"
         style={linkStyle}
         rel="noopener noreferrer"

@@ -9,6 +9,10 @@ const theme = createTheme({
       primary: "#fff",
       secondary: "#bdbdbd",
     },
+    background: {
+      default: "#000",
+      paper: "#424242",
+    },
   },
 });
 

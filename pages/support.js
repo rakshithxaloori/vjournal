@@ -1,9 +1,9 @@
 import Head from "next/head";
-import Link from "next/link";
 
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+
+import SupportClipboard from "@/components/supportClipboard";
 
 const Support = () => {
   return (
@@ -25,20 +25,12 @@ const Support = () => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <Typography variant="body1" color="primary" sx={{ mb: 2 }}>
-            If you have any questions or need help with VJournal, please contact
-            us at:
-          </Typography>
-          <Typography variant="body1" color="primary" sx={{ mb: 2 }}>
-            <Link
-              href="mailto:support@vjournal.me"
-              rel="noopener noreferrer"
-              target="_blank"
-              style={{ color: "white" }}
-            >
-              support@vjournal.me
-            </Link>
-          </Typography>
+          <SupportClipboard>
+            <Typography variant="body1" color="primary" sx={{ mb: 2 }}>
+              If you have any questions or need help with VJournal, please
+              contact us at:
+            </Typography>
+          </SupportClipboard>
         </Grid>
       </Grid>
     </>
