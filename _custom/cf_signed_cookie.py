@@ -1,9 +1,7 @@
-import base64
 import datetime
 import json
 import requests
 
-import boto3
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import serialization
@@ -15,12 +13,7 @@ from video.models import Video
 import os
 
 
-ssm_client = boto3.client("ssm")
-
-# CloudFront secret from SSM
-# CF_SIGNED_URL_KEY_PAIR_ID = ssm_client.get_parameter(f"CF_SIGNED_URL_KEY_PAIR_ID")
 CF_KEY_PAIR_ID = os.environ.get("CF_SIGNED_URL_KEY_PAIR_ID")
-# CF_SIGNED_URL_PRIVATE_KEY = ssm_client.get_parameter(f"CF_SIGNED_URL_PRIVATE_KEY")
 CF_PRIVATE_KEY = """
 -----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC3E6Bm+D+fa+fq
@@ -52,12 +45,9 @@ NcOwQe+R9s0uhGvc7VRGQi+a
 -----END PRIVATE KEY-----
 """
 
-ENCODE_FORMAT = "utf-8"
-# ENCODE_FORMAT = "ascii"
-
 
 # Encode the private key as bytes
-CF_PRIVATE_KEY = CF_PRIVATE_KEY.encode(ENCODE_FORMAT)
+CF_PRIVATE_KEY = CF_PRIVATE_KEY.encode("utf-8")
 
 # fix possible escaped newlines
 CF_PRIVATE_KEY = CF_PRIVATE_KEY.replace(b"\\n", b"\n")
@@ -91,8 +81,6 @@ def datetime2timestamp(dt, default_timezone=None):
 
 
 def build_policy(full_url, date_less_than):
-    # Replace ".mpd" with "*"
-    full_url = full_url.replace(".mpd", "*")
     moment = int(datetime2timestamp(date_less_than))
     condition = OrderedDict({"DateLessThan": {"AWS:EpochTime": moment}})
 
@@ -102,9 +90,11 @@ def build_policy(full_url, date_less_than):
 
 
 def get_signed_url(full_url):
-    expires = datetime.datetime.now() + datetime.timedelta(seconds=EXPIRATION_SECONDS)
+    date_less_than = datetime.datetime.now() + datetime.timedelta(
+        seconds=EXPIRATION_SECONDS
+    )
 
-    custom_policy = build_policy(full_url, expires)
+    custom_policy = build_policy(full_url, date_less_than)
     signed_url = cloudfront_signer.generate_presigned_url(
         full_url, policy=custom_policy
     )
@@ -118,12 +108,15 @@ def fetch_signed_url():
     video_url = f"{CLOUDFRONT_BASE_URL}/{file_path.replace('.mpd', '_video.mp4')}"
     audio_url = f"{CLOUDFRONT_BASE_URL}/{file_path.replace('.mpd', '_audio.mp4')}"
 
-    signed_url = get_signed_url(mpd_url)
+    # Replace ".mpd" with "*"
+    full_url = mpd_url.replace(".mpd", "*")
+    cf_signed_url = get_signed_url(full_url)
 
-    query_string = signed_url.split("?")[1]
+    query_string = cf_signed_url.split("?")[1]
     query_params = dict(qc.split("=") for qc in query_string.split("&"))
-    response = requests.get(audio_url, params=query_params, stream=True)
-    return response.content
+    # response = requests.get(audio_url, params=query_params, stream=True)
+    # return response.content
+    return query_params
 
 
 # from _custom.cf_signed_cookie import *
