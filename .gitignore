@@ -13,5 +13,6 @@ media
 **/custom.py
 **.DS_Store
 celerybeat-schedule
-_custom/*
+_custom/*.sh
 runserver.sh
+*.pem
