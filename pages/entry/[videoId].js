@@ -16,7 +16,6 @@ import {
 } from "@/utils/APIKit";
 
 const Entry = ({ video }) => {
-  console.log(video);
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const [title, setTitle] = useState(video.title);
@@ -60,43 +59,13 @@ const Entry = ({ video }) => {
   useEffect(() => {
     const loadDash = async () => {
       if (typeof window !== "undefined") {
-        // const manifestUrl = await getManifestUrl(video);
-        let manifestUrl = video.url;
-        const query_params = video.query_params;
-        let query_string = "";
-        for (const [key, value] of Object.entries(query_params)) {
-          query_string += `${key}=${value}&`;
-        }
-        // Remove the last ampersand
-        query_string = query_string.slice(0, -1);
-
-        manifestUrl += `?${query_string}`;
+        const manifestUrl = await getManifestUrl(video);
 
         const dashjs = await import("dashjs");
         playerRef.current = dashjs.MediaPlayer().create();
 
         // Initialize the player with new manifest
         playerRef.current.initialize(videoRef.current, manifestUrl, true);
-
-        playerRef.current.extend("RequestModifier", () => {
-          return {
-            // modifyRequestHeader: (xhr) => {
-            //   const signed_cookie = video.signed_cookie;
-            //   let cookie_string = "";
-            //   for (const [key, value] of Object.entries(signed_cookie)) {
-            //     cookie_string += `${key}=${value}; `;
-            //   }
-            //   // Remove the last semicolon
-            //   cookie_string = cookie_string.slice(0, -2);
-            //   xhr.setRequestHeader("Cookie", cookie_string);
-            //   return xhr;
-            // },
-            modifyRequestURL: function (url) {
-              // Modify url adding a custom query string parameter
-              return url + `?${query_string}`;
-            },
-          };
-        });
       }
     };
 
@@ -260,16 +229,36 @@ const getPrettyDate = (date) => {
 };
 
 const getManifestUrl = async (video) => {
-  let manifestUrl = video.urls.mpd;
-  let videoUrl = video.urls.video;
-  let audioUrl = video.urls.audio;
+  let manifestUrl = video.url;
+  const mpd_path = ".mpd";
+
+  const query_params = video.access.query_params;
+  let query_string = "";
+  for (const [key, value] of Object.entries(query_params)) {
+    query_string += `${key}=${value}&`;
+  }
+  // Remove the last ampersand
+  query_string = query_string.slice(0, -1);
+
+  manifestUrl += `?${query_string}`;
 
   const response = await fetch(manifestUrl);
   const manifest = await response.text();
 
+  let videoPath = "_video.mp4";
+  let audioPath = "_audio.mp4";
+
+  // Add the query string to the video and audio URLs
+  videoPath += `?${query_string}`;
+  audioPath += `?${query_string}`;
+
   // Replace & with &amp;
-  videoUrl = videoUrl.replace(/&/g, "&amp;");
-  audioUrl = audioUrl.replace(/&/g, "&amp;");
+  videoPath = videoPath.replace(/&/g, "&amp;");
+  audioPath = audioPath.replace(/&/g, "&amp;");
+
+  const baseUrl = video.url.slice(0, video.url.indexOf(mpd_path));
+  const videoUrl = baseUrl + videoPath;
+  const audioUrl = baseUrl + audioPath;
 
   // Replace the video and audio URLs with the ones we got from the server
   const newManifest = manifest
