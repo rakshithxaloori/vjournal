@@ -258,3 +258,9 @@ STRIPE_PRICE_ID_INR = os.environ["STRIPE_PRICE_ID_INR"]
 # Resend
 RESEND_API_KEY = os.environ["RESEND_API_KEY"]
 RESEND_WEBHOOK_SIGNING_KEY = os.environ["RESEND_WEBHOOK_SIGNING_KEY"]
+
+################################################################################
+# CloudFront
+AWS_OUTPUT_DOMAIN = os.environ["AWS_OUTPUT_DOMAIN"]
+AWS_CF_KEY_PAIR_ID = os.environ["AWS_CF_KEY_PAIR_ID"]
+AWS_CF_PRIVATE_KEY = os.environ["AWS_CF_PRIVATE_KEY"]

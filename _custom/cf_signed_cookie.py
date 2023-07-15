@@ -12,15 +12,15 @@ from video.models import Video
 import os
 
 
-CF_KEY_PAIR_ID = os.environ.get("AWS_CF_KEY_PAIR_ID")
-CF_PRIVATE_KEY = os.environ.get("AWS_CF_PRIVATE_KEY")
+AWS_CF_KEY_PAIR_ID = os.environ.get("AWS_CF_KEY_PAIR_ID")
+AWS_CF_PRIVATE_KEY = os.environ.get("AWS_CF_PRIVATE_KEY")
 
 
 # Encode the private key as bytes
-CF_PRIVATE_KEY = CF_PRIVATE_KEY.encode("utf-8")
+AWS_CF_PRIVATE_KEY = AWS_CF_PRIVATE_KEY.encode("utf-8")
 
 # fix possible escaped newlines
-CF_PRIVATE_KEY = CF_PRIVATE_KEY.replace(b"\\n", b"\n")
+AWS_CF_PRIVATE_KEY = AWS_CF_PRIVATE_KEY.replace(b"\\n", b"\n")
 
 EXPIRATION_SECONDS = 600
 AWS_OUTPUT_DOMAIN = os.environ["AWS_OUTPUT_DOMAIN"]
@@ -29,12 +29,12 @@ CLOUDFRONT_BASE_URL = f"https://{AWS_OUTPUT_DOMAIN}"
 
 def get_cf_sign(message):
     private_key = serialization.load_pem_private_key(
-        CF_PRIVATE_KEY, password=None, backend=default_backend()
+        AWS_CF_PRIVATE_KEY, password=None, backend=default_backend()
     )
     return private_key.sign(message, padding.PKCS1v15(), hashes.SHA1())
 
 
-cloudfront_signer = CloudFrontSigner(CF_KEY_PAIR_ID, get_cf_sign)
+cloudfront_signer = CloudFrontSigner(AWS_CF_KEY_PAIR_ID, get_cf_sign)
 
 
 def fetch_signed_url():
@@ -54,6 +54,14 @@ def fetch_signed_url():
 
     query_string = cf_signed_url.split("?")[1]
     query_params = dict(qc.split("=") for qc in query_string.split("&"))
+
+    response = requests.get(video_url, params=query_params, stream=True)
+    if response.ok:
+        print(response.request.url)
+        return query_params
+    else:
+        print(response.reason)
+        return None
 
     cookie = {
         "CloudFront-Policy": query_params["Policy"],

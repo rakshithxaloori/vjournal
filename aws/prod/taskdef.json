@@ -54,6 +54,14 @@
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_S3_SECRET_ACCESS_KEY"
           },
           {
+            "name": "AWS_CF_KEY_PAIR_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_KEY_PAIR_ID"
+          },
+          {
+            "name": "AWS_CF_PRIVATE_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_PRIVATE_KEY"
+          },
+          {
             "name": "AWS_MEDIACONVERT_ACCESS_KEY_ID",
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_MEDIACONVERT_ACCESS_KEY_ID"
           },
@@ -176,6 +184,14 @@
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_S3_SECRET_ACCESS_KEY"
           },
           {
+            "name": "AWS_CF_KEY_PAIR_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_KEY_PAIR_ID"
+          },
+          {
+            "name": "AWS_CF_PRIVATE_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_PRIVATE_KEY"
+          },
+          {
             "name": "AWS_MEDIACONVERT_ACCESS_KEY_ID",
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_MEDIACONVERT_ACCESS_KEY_ID"
           },
@@ -290,6 +306,14 @@
           {
             "name": "AWS_S3_SECRET_ACCESS_KEY",
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_S3_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_CF_KEY_PAIR_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_KEY_PAIR_ID"
+          },
+          {
+            "name": "AWS_CF_PRIVATE_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_PRIVATE_KEY"
           },
           {
             "name": "AWS_MEDIACONVERT_ACCESS_KEY_ID",
@@ -412,6 +436,14 @@
           {
             "name": "AWS_S3_SECRET_ACCESS_KEY",
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_S3_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_CF_KEY_PAIR_ID",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_KEY_PAIR_ID"
+          },
+          {
+            "name": "AWS_CF_PRIVATE_KEY",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_PRIVATE_KEY"
           },
           {
             "name": "AWS_MEDIACONVERT_ACCESS_KEY_ID",

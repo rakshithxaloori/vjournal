@@ -27,7 +27,7 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         crontab(hour="*/3"),
         check_video_uploaded_task.s(),
-        name="check video uploaded every 1 minute",
+        name="check video uploaded every 3 hours",
     )
 
 

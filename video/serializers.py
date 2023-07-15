@@ -1,9 +1,12 @@
+from django.conf import settings
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 
 from video.models import Video
-from video.utils import create_presigned_url
-from vjournal.utils import get_cdn_url
+from vjournal.utils import get_cdn_url, get_out_access
+
+
+AWS_OUTPUT_DOMAIN = settings.AWS_OUTPUT_DOMAIN
 
 
 class VideoShortSerializer(ModelSerializer):
@@ -29,7 +32,8 @@ class VideoShortSerializer(ModelSerializer):
 
 
 class VideoLongSerializer(ModelSerializer):
-    urls = SerializerMethodField()
+    url = SerializerMethodField()
+    access = SerializerMethodField()
     summary = SerializerMethodField()
 
     class Meta:
@@ -40,18 +44,20 @@ class VideoLongSerializer(ModelSerializer):
             "title",
             "duration_in_ms",
             "status",
-            "urls",
+            "url",
+            "access",
             "summary",
         ]
 
-    def get_urls(self, obj):
+    def get_url(self, obj):
         if obj.file_path is None:
             return None
-        return {
-            "mpd": create_presigned_url(obj.file_path),
-            "video": create_presigned_url(obj.file_path.replace(".mpd", "_video.mp4")),
-            "audio": create_presigned_url(obj.file_path.replace(".mpd", "_audio.mp4")),
-        }
+        return f"https://{AWS_OUTPUT_DOMAIN}/{obj.file_path}"
+
+    def get_access(self, obj):
+        if obj.file_path is None:
+            return None
+        return get_out_access(obj.file_path)
 
     def get_summary(self, obj):
         if obj.summary is None:

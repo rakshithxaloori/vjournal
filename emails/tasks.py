@@ -21,6 +21,9 @@ def setup_periodic_tasks(sender, **kwargs):
 
 @celery_app.task
 def send_emails_task():
+    # TODO ratelimit
+    # https://resend.com/docs/api-reference/introduction#rate-limit
+    # https://pypi.org/project/ratelimit/
     queued_emails = Email.objects.filter(status=Email.QUEUED)
     for email in queued_emails:
         params = {
