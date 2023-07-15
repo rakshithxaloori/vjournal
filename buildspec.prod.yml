@@ -47,6 +47,7 @@ phases:
       - . ./env.bash
 
       - echo CI_CD_STAGE $CI_CD_STAGE
+      - echo AWS_OUTPUT_DOMAIN $AWS_OUTPUT_DOMAIN
 
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
