@@ -54,6 +54,10 @@
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_S3_SECRET_ACCESS_KEY"
           },
           {
+            "name": "AWS_OUTPUT_DOMAIN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_OUTPUT_DOMAIN"
+          },
+          {
             "name": "AWS_CF_KEY_PAIR_ID",
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_KEY_PAIR_ID"
           },
@@ -184,6 +188,10 @@
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_S3_SECRET_ACCESS_KEY"
           },
           {
+            "name": "AWS_OUTPUT_DOMAIN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_OUTPUT_DOMAIN"
+          },
+          {
             "name": "AWS_CF_KEY_PAIR_ID",
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_CF_KEY_PAIR_ID"
           },
@@ -306,6 +314,10 @@
           {
             "name": "AWS_S3_SECRET_ACCESS_KEY",
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_S3_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_OUTPUT_DOMAIN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_OUTPUT_DOMAIN"
           },
           {
             "name": "AWS_CF_KEY_PAIR_ID",
@@ -436,6 +448,10 @@
           {
             "name": "AWS_S3_SECRET_ACCESS_KEY",
             "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_S3_SECRET_ACCESS_KEY"
+          },
+          {
+            "name": "AWS_OUTPUT_DOMAIN",
+            "valueFrom": "arn:aws:ssm:us-east-1:662294483096:parameter/vj-prod/AWS_OUTPUT_DOMAIN"
           },
           {
             "name": "AWS_CF_KEY_PAIR_ID",
