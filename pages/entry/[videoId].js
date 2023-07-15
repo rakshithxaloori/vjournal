@@ -16,6 +16,7 @@ import {
 } from "@/utils/APIKit";
 
 const Entry = ({ video }) => {
+  console.log(video);
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const [title, setTitle] = useState(video.title);
@@ -59,13 +60,43 @@ const Entry = ({ video }) => {
   useEffect(() => {
     const loadDash = async () => {
       if (typeof window !== "undefined") {
-        const manifestUrl = await getManifestUrl(video);
+        // const manifestUrl = await getManifestUrl(video);
+        let manifestUrl = video.url;
+        const query_params = video.query_params;
+        let query_string = "";
+        for (const [key, value] of Object.entries(query_params)) {
+          query_string += `${key}=${value}&`;
+        }
+        // Remove the last ampersand
+        query_string = query_string.slice(0, -1);
+
+        manifestUrl += `?${query_string}`;
 
         const dashjs = await import("dashjs");
         playerRef.current = dashjs.MediaPlayer().create();
 
         // Initialize the player with new manifest
         playerRef.current.initialize(videoRef.current, manifestUrl, true);
+
+        playerRef.current.extend("RequestModifier", () => {
+          return {
+            // modifyRequestHeader: (xhr) => {
+            //   const signed_cookie = video.signed_cookie;
+            //   let cookie_string = "";
+            //   for (const [key, value] of Object.entries(signed_cookie)) {
+            //     cookie_string += `${key}=${value}; `;
+            //   }
+            //   // Remove the last semicolon
+            //   cookie_string = cookie_string.slice(0, -2);
+            //   xhr.setRequestHeader("Cookie", cookie_string);
+            //   return xhr;
+            // },
+            modifyRequestURL: function (url) {
+              // Modify url adding a custom query string parameter
+              return url + `?${query_string}`;
+            },
+          };
+        });
       }
     };
 
