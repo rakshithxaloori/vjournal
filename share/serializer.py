@@ -1,10 +1,29 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from share.models import Share
+from share.models import Contact, Share
+
+
+class ContactSerializer(ModelSerializer):
+    name = SerializerMethodField()
+    email = SerializerMethodField()
+
+    class Meta:
+        model = Contact
+        fields = ["id", "name", "email"]
+
+    def get_name(self, obj):
+        if obj.contact_user:
+            return f"{obj.contact_user.first_name} {obj.contact_user.last_name}"
+        return obj.contact_name
+
+    def get_email(self, obj):
+        if obj.contact_user:
+            return obj.contact_user.email
+        return obj.contact_email
 
 
 class ShareSerializer(ModelSerializer):
-    shared_to = SerializerMethodField()
+    contact = ContactSerializer()
 
     class Meta:
         model = Share
@@ -12,16 +31,5 @@ class ShareSerializer(ModelSerializer):
             "id",
             "created_at",
             "video",
-            "shared_to",
+            "contact",
         ]
-
-    def get_shared_to(self, obj):
-        if obj.shared_to_user:
-            return {
-                "name": f"{obj.shared_to_user.first_name} {obj.shared_to_user.last_name}",
-                "email": obj.shared_to_user.email,
-            }
-        return {
-            "name": obj.shared_to_name,
-            "email": obj.shared_to_email,
-        }

@@ -1,7 +1,6 @@
 import uuid
 
-from django.conf import settings
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 
 
 from rest_framework import status
@@ -19,36 +18,56 @@ from knox.auth import TokenAuthentication
 from vjournal.utils import BAD_REQUEST_RESPONSE
 from authentication.models import User
 from video.models import Video
-from share.models import Share
+from share.models import Contact, Share
 from share.serializer import ShareSerializer
+
+
+MAX_CONTACTS = 200
 
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def create_shared_to_view(request):
-    user_full_name = request.data.get("user_fullname", None)
-    user_email = request.data.get("user_email", None)
+    contact_fullname = request.data.get("contact_fullname", None)
+    contact_email = request.data.get("contact_email", None)
     video_id = request.data.get("video_id", None)
 
-    if None in [user_full_name, user_email, video_id]:
+    if None in [contact_fullname, contact_email, video_id]:
         return BAD_REQUEST_RESPONSE
+
+    if Contact.objects.filter(user=request.user).count() >= MAX_CONTACTS:
+        return JsonResponse(
+            {
+                "detail": "You have reached the maximum number of contacts.",
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    try:
+        contact = Contact.objects.get(user=request.user, contact_email=contact_email)
+    except Contact.DoesNotExist:
+        # Create contact
+        try:
+            contact_user = User.objects.get(email=contact_email)
+            contact = Contact.objects.create(
+                user=request.user,
+                contact_user=contact_user,
+            )
+        except User.DoesNotExist:
+            contact = Contact.objects.create(
+                user=request.user,
+                contact_name=contact_fullname,
+                contact_email=contact_email,
+            )
 
     try:
         video = Video.objects.get(id=video_id)
-        shared_to_user = User.objects.get(email=user_email)
+        contact_user = User.objects.get(email=contact_email)
         Share.objects.create(
             user=request.user,
             video=video,
-            shared_to_user=shared_to_user,
-        )
-
-    except User.DoesNotExist:
-        Share.objects.create(
-            user=request.user,
-            video=video,
-            shared_to_name=user_full_name,
-            shared_to_email=user_email,
+            contact=contact,
         )
     except Video.DoesNotExist:
         return BAD_REQUEST_RESPONSE
