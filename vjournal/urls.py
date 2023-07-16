@@ -35,6 +35,7 @@ urlpatterns = [
     path("subscription/", include("subscription.urls")),
     path("emails/", include("emails.urls")),
     path("account/", include("account.urls")),
+    path("share/", include("share.urls")),
     path("ht/", include("health.urls")),
     path(f"{boss_url}/", include("boss.urls")),
 ]
