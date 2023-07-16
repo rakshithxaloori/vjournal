@@ -14,6 +14,8 @@ import {
   createClientAPIKit,
   networkError,
 } from "@/utils/APIKit";
+import FlashMessage from "@/components/flashMessage";
+import ShareButton from "@/components/buttons/share";
 
 const Entry = ({ video }) => {
   const videoRef = useRef(null);
@@ -108,27 +110,37 @@ const Entry = ({ video }) => {
             <Typography variant="h4" color="primary" sx={{ mb: 1 }}>
               {getPrettyDate(video.created_at)}
             </Typography>
-            {isEditTitle ? (
-              <TextField
-                id="title"
-                label="Title"
-                variant="filled"
-                value={title}
-                onChange={handleChangeTitle}
-                onBlur={() => setIsEditTitle(false)}
-                onKeyDown={onKeyDown}
-                sx={{ width: "100%" }}
-                helperText="Press Enter to save"
-              />
-            ) : (
-              <Typography
-                variant="h6"
-                color="textSecondary"
-                onClick={() => setIsEditTitle(true)}
-              >
-                {title}
-              </Typography>
-            )}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              {isEditTitle ? (
+                <TextField
+                  id="title"
+                  label="Title"
+                  variant="filled"
+                  value={title}
+                  onChange={handleChangeTitle}
+                  onBlur={() => setIsEditTitle(false)}
+                  onKeyDown={onKeyDown}
+                  sx={{ width: "100%" }}
+                  helperText="Press Enter to save"
+                />
+              ) : (
+                <Typography
+                  variant="h6"
+                  color="textSecondary"
+                  onClick={() => setIsEditTitle(true)}
+                >
+                  {title}
+                </Typography>
+              )}
+              <Box sx={{ flexGrow: 1 }} />
+              <ShareButton entry_id={video.id} setError={setMessage} />
+            </Box>
           </Box>
           <video ref={videoRef} autoPlay controls style={videoStyle} />
           {summary && (
@@ -168,6 +180,7 @@ const Entry = ({ video }) => {
             </Box>
           )}
         </Box>
+        <FlashMessage message={message} setMessage={setMessage} />
       </Box>
     </>
   );
