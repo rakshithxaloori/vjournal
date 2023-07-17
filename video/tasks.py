@@ -3,7 +3,6 @@ from celery.schedules import crontab
 
 from django.conf import settings
 from django.utils import timezone
-from django.core.files.storage import default_storage
 
 
 from vjournal.celery import app as celery_app

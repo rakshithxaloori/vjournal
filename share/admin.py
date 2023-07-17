@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from share.models import Contact, Share
+
+admin.site.register(Contact)
+admin.site.register(Share)

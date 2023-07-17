@@ -63,11 +63,21 @@ def create_shared_to_view(request):
 
     try:
         video = Video.objects.get(id=video_id)
-        contact_user = User.objects.get(email=contact_email)
-        Share.objects.create(
+        share = Share.objects.create(
             user=request.user,
             video=video,
             contact=contact,
+        )
+        serializer = ShareSerializer(share)
+
+        return JsonResponse(
+            {
+                "detail": "Entry shared successfully.",
+                "payload": {
+                    "share": serializer.data,
+                },
+            },
+            status=status.HTTP_200_OK,
         )
     except Video.DoesNotExist:
         return BAD_REQUEST_RESPONSE

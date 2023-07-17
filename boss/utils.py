@@ -62,6 +62,7 @@ def send_entry_email(video):
     )
 
     send_email(
+        username=video.user.username,
         from_email="VJournal <entry@vjournal.me>",
         to_email=video.user.email,
         subject=f"{title} | {dateStr}'s VJournal Entry",
