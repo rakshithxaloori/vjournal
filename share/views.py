@@ -1,5 +1,3 @@
-import uuid
-
 from django.http import JsonResponse
 
 
@@ -19,7 +17,7 @@ from vjournal.utils import BAD_REQUEST_RESPONSE
 from authentication.models import User
 from video.models import Video
 from share.models import Contact, Share
-from share.serializer import ShareSerializer
+from share.serializers import ShareSerializer
 
 
 MAX_CONTACTS = 200
@@ -71,7 +69,7 @@ def create_shared_to_view(request):
 
     try:
         video = Video.objects.get(id=video_id)
-        share = Share.objects.get_or_create(
+        share, created = Share.objects.get_or_create(
             user=request.user,
             video=video,
             contact=contact,

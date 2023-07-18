@@ -27,9 +27,4 @@ class ShareSerializer(ModelSerializer):
 
     class Meta:
         model = Share
-        fields = [
-            "id",
-            "created_at",
-            "video",
-            "contact",
-        ]
+        fields = ["id", "created_at", "contact"]
