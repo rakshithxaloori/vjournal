@@ -20,8 +20,8 @@ import ShareButton from "@/components/buttons/share";
 const Entry = ({ video }) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
-  const [title, setTitle] = useState(video.title);
-  const [summary, setSummary] = useState(video.summary || "");
+  const [title, setTitle] = useState(video?.title || "");
+  const [summary, setSummary] = useState(video?.summary || "");
 
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [isEditSummary, setIsEditSummary] = useState(false);
@@ -71,11 +71,13 @@ const Entry = ({ video }) => {
       }
     };
 
-    loadDash();
+    if (video) loadDash();
     return () => {
       if (playerRef.current) playerRef.current.reset();
     };
   }, []);
+
+  if (!video) return null;
 
   return (
     <>

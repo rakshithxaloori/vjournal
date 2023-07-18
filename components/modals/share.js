@@ -30,7 +30,6 @@ const ShareModal = ({ open, setOpen, entry_id, setError }) => {
           });
           const { shares } = response.data?.payload;
           setShareList(shares);
-          console.log("Share list", shares);
         } catch (e) {
           setError(networkError);
         } finally {

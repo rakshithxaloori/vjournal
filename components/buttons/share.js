@@ -7,7 +7,7 @@ import ShareModal from "@/components/modals/share";
 const ShareButton = ({ entry_id, count, setError = () => {} }) => {
   const [open, setOpen] = useState(false);
 
-  if (count) {
+  if (typeof count === "number" && !isNaN(count)) {
     return (
       <>
         <Button variant="contained" onClick={() => setOpen(true)}>
