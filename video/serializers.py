@@ -35,6 +35,7 @@ class VideoLongSerializer(ModelSerializer):
     url = SerializerMethodField()
     access = SerializerMethodField()
     summary = SerializerMethodField()
+    share_count = SerializerMethodField()
 
     class Meta:
         model = Video
@@ -47,6 +48,7 @@ class VideoLongSerializer(ModelSerializer):
             "url",
             "access",
             "summary",
+            "share_count",
         ]
 
     def get_url(self, obj):
@@ -63,3 +65,6 @@ class VideoLongSerializer(ModelSerializer):
         if obj.summary is None:
             return None
         return obj.summary.text
+
+    def get_share_count(self, obj):
+        return obj.shares.count()
