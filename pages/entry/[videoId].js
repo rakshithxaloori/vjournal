@@ -139,7 +139,11 @@ const Entry = ({ video }) => {
                 </Typography>
               )}
               <Box sx={{ flexGrow: 1 }} />
-              <ShareButton entry_id={video.id} setError={setMessage} />
+              <ShareButton
+                entry_id={video.id}
+                count={video.share_count}
+                setError={setMessage}
+              />
             </Box>
           </Box>
           <video ref={videoRef} autoPlay controls style={videoStyle} />

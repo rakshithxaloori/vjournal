@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 
 import { createClientAPIKit, networkError } from "@/utils/APIKit";
 
@@ -164,44 +166,53 @@ const ShareModal = ({ open, setOpen, entry_id, setError }) => {
         {shareList.length > 0 ? (
           <Box>
             <Typography variant="h6" color="primary">
-              Shared with
+              Shared with ({shareList.length})
             </Typography>
-            {shareList.map((share) => (
-              // TODO use material ui list for scrollable. Also test it
-              <Box
-                key={share.id}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 2,
-                  my: 1,
-                }}
-              >
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  sx={{ flex: 2 }}
+            <List
+              sx={{
+                maxHeight: 200,
+                overflow: "auto",
+                my: 2,
+                bgcolor: "background.paper",
+                borderRadius: "5px",
+              }}
+            >
+              {shareList.map((share) => (
+                <ListItem
+                  key={share.id}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 2,
+                    my: 1,
+                  }}
                 >
-                  {share.contact.name}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  sx={{ flex: 6 }}
-                >
-                  {share.contact.email}
-                </Typography>
-                <Button
-                  variant="contained"
-                  sx={{ flex: 2 }}
-                  onClick={() => handleRemove(share.id)}
-                  disabled={disabled}
-                >
-                  Remove
-                </Button>
-              </Box>
-            ))}
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    sx={{ flex: 2 }}
+                  >
+                    {share.contact.name}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    sx={{ flex: 6 }}
+                  >
+                    {share.contact.email}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    sx={{ flex: 2 }}
+                    onClick={() => handleRemove(share.id)}
+                    disabled={disabled}
+                  >
+                    Remove
+                  </Button>
+                </ListItem>
+              ))}
+            </List>
           </Box>
         ) : (
           <Typography variant="body2" color="textSecondary">

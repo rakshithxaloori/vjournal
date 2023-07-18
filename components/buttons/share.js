@@ -4,13 +4,13 @@ import Button from "@mui/material/Button";
 
 import ShareModal from "@/components/modals/share";
 
-const ShareButton = ({ entry_id, setError = () => {} }) => {
+const ShareButton = ({ entry_id, count, setError = () => {} }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <Button variant="contained" onClick={() => setOpen(true)}>
-        Share
+        Share ({count})
       </Button>
       <ShareModal
         open={open}
