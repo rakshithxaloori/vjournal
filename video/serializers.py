@@ -67,4 +67,9 @@ class VideoLongSerializer(ModelSerializer):
         return obj.summary.text
 
     def get_share_count(self, obj):
+        username = self.context.get("username")
+        if username is None:
+            return None
+        if obj.user.username != username:
+            return None
         return obj.shares.count()

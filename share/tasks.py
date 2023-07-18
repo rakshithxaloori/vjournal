@@ -23,7 +23,7 @@ def send_share_email_task(share_id):
         html = str(share_html_template)
         plain = str(share_plain_template)
 
-        entry_url = f"https://vjournal.me/entry/{video.id}/{share.code}"
+        entry_url = f"https://vjournal.me/entry/{video.id}?c={share.code}"
 
         html = html.format(
             brand_logo_url=brand_logo_url,

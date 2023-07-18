@@ -6,6 +6,7 @@ from datetime import datetime
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 
 from rest_framework import status
@@ -25,6 +26,7 @@ from video.models import Video, Summary
 from video.utils import create_presigned_s3_post, create_mediaconvert_job, sns_client
 from video.serializers import VideoShortSerializer, VideoLongSerializer
 from video.tasks import del_objects_from_s3_task, create_thumbnail_instance_task
+from share.models import Share
 from subscription.middleware import subscription_middleware
 
 
@@ -146,16 +148,24 @@ def get_video_detail_view(request):
 
     try:
         video = Video.objects.get(id=video_id, user=request.user)
-        serializer = VideoLongSerializer(video)
-        return JsonResponse(
-            {
-                "details": "Video retrieved successfully",
-                "payload": {"video": serializer.data},
-            },
-            status=status.HTTP_200_OK,
-        )
     except Video.DoesNotExist:
+        email = request.user.email
+        share = Share.objects.get(
+            Q(video__id=video_id),
+            Q(contact__contact_email=email) | Q(contact__contact_user__email=email),
+        )
+        video = share.video
+    except Share.DoesNotExist:
         return BAD_REQUEST_RESPONSE
+
+    serializer = VideoLongSerializer(video, context={"username": request.user.username})
+    return JsonResponse(
+        {
+            "details": "Video retrieved successfully",
+            "payload": {"video": serializer.data},
+        },
+        status=status.HTTP_200_OK,
+    )
 
 
 @api_view(["POST"])
