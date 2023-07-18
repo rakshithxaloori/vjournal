@@ -36,6 +36,14 @@ def create_shared_to_view(request):
     if None in [contact_fullname, contact_email, video_id]:
         return BAD_REQUEST_RESPONSE
 
+    if contact_email == request.user.email:
+        return JsonResponse(
+            {
+                "detail": "Haha funny! You cannot share to yourself.",
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     if Contact.objects.filter(user=request.user).count() >= MAX_CONTACTS:
         return JsonResponse(
             {
@@ -63,7 +71,7 @@ def create_shared_to_view(request):
 
     try:
         video = Video.objects.get(id=video_id)
-        share = Share.objects.create(
+        share = Share.objects.get_or_create(
             user=request.user,
             video=video,
             contact=contact,
