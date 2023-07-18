@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import Link from "next/link";
 
-const SignIn = () => {
+const SignIn = ({ next }) => {
   return (
     <Box
       sx={{
@@ -49,7 +49,7 @@ const SignIn = () => {
           color="primary"
           onClick={() =>
             signIn("google", {
-              callbackUrl: `${window.location.origin}/`,
+              callbackUrl: `${window.location.origin}/${next || ""}`,
             })
           }
         >
@@ -70,8 +70,11 @@ export const getServerSideProps = async (context) => {
       },
     };
   } else {
+    const { next } = context.query;
     return {
-      props: {},
+      props: {
+        next,
+      },
     };
   }
 };

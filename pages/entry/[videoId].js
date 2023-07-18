@@ -196,15 +196,24 @@ export default dynamic(() => Promise.resolve(Entry), {
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
+  const { videoId } = context.query;
   if (!session) {
-    return {
-      redirect: {
-        destination: "/auth/signin",
-        permanent: false,
-      },
-    };
+    if (videoId)
+      return {
+        redirect: {
+          destination: `/auth/signin?next=/entry/${videoId}`,
+          permanent: false,
+        },
+      };
+    else {
+      return {
+        redirect: {
+          destination: "/auth/signin",
+          permanent: false,
+        },
+      };
+    }
   } else {
-    const { videoId } = context.query;
     if (videoId) {
       try {
         const APIKit = await createServerAPIKit(session.token_key);
@@ -221,7 +230,7 @@ export async function getServerSideProps(context) {
     } else
       return {
         redirect: {
-          destination: "/",
+          destination: "/auth/signin",
           permanent: false,
         },
       };
