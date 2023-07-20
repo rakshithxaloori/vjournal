@@ -26,7 +26,7 @@ export default function App() {
   useEffect(() => {
     (async () => {
       await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+        ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
       );
     })();
     return async () => {
@@ -42,8 +42,6 @@ export default function App() {
       .reduce((t, n) => parseInt(t) / parseInt(n));
     // This issue only affects Android
     if (Platform.OS === "android") {
-      // TODO make the screen landscape
-      //   const screenRatio = width / height;
       const lWidth = height;
       const lHeight = width;
       const screenRatio = lWidth / lHeight;
@@ -59,16 +57,20 @@ export default function App() {
           desiredRatioVal = ratioVal;
         }
       }
+      console.log("Desired ratio: ", desiredRatioStr);
+      // Add padding to the sides of the camera
+      const sidePadding = (lWidth - desiredRatioVal * lHeight) / 2;
+      setXPadding(sidePadding);
 
-      if (screenRatio > desiredRatioVal) {
-        // Add padding to the sides of the camera
-        const sidePadding = (lWidth - desiredRatioVal * lHeight) / 2;
-        setXPadding(sidePadding);
-      } else {
-        // Add padding to the top and bottom of the camera
-        const bottomPadding = (lHeight - lWidth / desiredRatioVal) / 2;
-        setYPadding(bottomPadding);
-      }
+      // if (screenRatio > desiredRatioVal) {
+      //   // Add padding to the sides of the camera
+      //   const sidePadding = (lWidth - desiredRatioVal * lHeight) / 2;
+      //   setXPadding(sidePadding);
+      // } else {
+      //   // Add padding to the top and bottom of the camera
+      //   const bottomPadding = (lHeight - lWidth / desiredRatioVal) / 2;
+      //   setYPadding(bottomPadding);
+      // }
 
       setRatio(desiredRatioStr);
       // Set a flag so we don't do this
@@ -111,10 +113,8 @@ export default function App() {
         style={[
           styles.camera,
           {
-            marginTop: xPadding,
-            marginBottom: xPadding,
-            marginLeft: yPadding,
-            marginRight: yPadding,
+            marginHorizontal: xPadding,
+            marginVertical: yPadding,
           },
         ]}
         type={type}
