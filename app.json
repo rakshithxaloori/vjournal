@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "VJournal",
-    "slug": "VJournal",
+    "slug": "vjournal-expo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,16 +14,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "me.vjournal.ios",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "bundleIdentifier": "me.vjournal.ios"
     },
     "android": {
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "me.vjournal.android",
-      "googleServicesFile": "./google-services.json"
+      "package": "me.vjournal.android"
     },
     "web": {
       "favicon": "./assets/favicon.png",
