@@ -4,11 +4,11 @@ import {
   GoogleSigninButton,
 } from "@react-native-google-signin/google-signin";
 
-const EXPO_PUBLIC_ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID;
+const EXPO_PUBLIC_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_WEB_CLIENT_ID;
 
 GoogleSignin.configure({
   scopes: ["email", "profile", "openid"],
-  webClientId: EXPO_PUBLIC_ANDROID_CLIENT_ID,
+  webClientId: EXPO_PUBLIC_WEB_CLIENT_ID,
   offlineAccess: true,
 });
 
