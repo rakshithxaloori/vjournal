@@ -1,17 +1,24 @@
 import React from "react";
 import { View, StyleSheet, Button } from "react-native";
+import { useLocalSearchParams, router } from "expo-router";
 import { Video, ResizeMode } from "expo-av";
 
-export default function App() {
+export default function VideoScreen() {
+  const { uri } = useLocalSearchParams();
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
+
+  if (!uri) {
+    router.replace("/home");
+  }
+
   return (
     <View style={styles.container}>
       <Video
         ref={video}
         style={styles.video}
         source={{
-          uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+          uri: uri,
         }}
         useNativeControls
         resizeMode={ResizeMode.CONTAIN}
