@@ -9,6 +9,7 @@ const EXPO_PUBLIC_ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID;
 GoogleSignin.configure({
   scopes: ["email", "profile", "openid"],
   webClientId: EXPO_PUBLIC_ANDROID_CLIENT_ID,
+  offlineAccess: true,
 });
 
 export default function SignIn() {

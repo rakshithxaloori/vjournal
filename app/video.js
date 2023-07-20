@@ -3,6 +3,8 @@ import { View, StyleSheet, Button } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { Video, ResizeMode } from "expo-av";
 
+const EXPO_PUBLIC_BASE_API_URL = process.env.EXPO_PUBLIC_BASE_API_URL;
+
 export default function VideoScreen() {
   const { uri } = useLocalSearchParams();
   const video = React.useRef(null);

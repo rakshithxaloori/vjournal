@@ -14,23 +14,16 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "infoPlist": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.70996124671-o47728ekpkn90f6mg54coc59o25s2hku"
-            ]
-          }
-        ]
-      },
-      "bundleIdentifier": "me.vjournal.ios"
+      "bundleIdentifier": "me.vjournal.ios",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "me.vjournal.android"
+      "package": "me.vjournal.android",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png",
