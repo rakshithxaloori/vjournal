@@ -26,6 +26,14 @@ export default function App({
   }, []);
 
   return (
+    <Box>
+      <Typography variant="h5" sx={{ mb: 1 }} color="primary">
+        VJournal is shut down. I&apos;m working on other projects.
+      </Typography>
+    </Box>
+  );
+
+  return (
     <ThemeProvider theme={theme}>
       <SessionProvider session={session}>
         <Layout>
